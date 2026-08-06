@@ -1,15 +1,15 @@
 ---
-name: branding
-description: "Guía de marca de Doscientos: tokens de color, tipografía, radios, logo y aplicación con Tailwind CSS v4. Usar al crear o modificar la interfaz visual de un proyecto de Doscientos."
+name: doscientos-internal-brand
+description: "Marca interna de Doscientos: tokens de color, tipografía, radios, logo y aplicación con Tailwind CSS v4. Usar solo en productos, webs corporativas o herramientas cuya marca sea Doscientos."
 ---
 
-# Guía de marca de Doscientos
+# Marca interna de Doscientos
 
 ## Objetivo
 
-Aplica estos tokens en los proyectos web de Doscientos para mantener una marca coherente, accesible y mantenible. Esta skill define la base visual; no inventes branding, paletas ni estilos alternativos sin aprobación.
+Aplica estos tokens únicamente en productos, webs corporativas, herramientas internas o materiales cuya marca sea Doscientos. Esta skill define la base visual; no inventes branding, paletas ni estilos alternativos sin aprobación.
 
-Antes de modificar estilos, inspecciona el sistema de diseño y los tokens ya existentes. Si el proyecto pertenece a otra marca o ya tiene tokens aprobados que entran en conflicto, no los sustituyas sin confirmación explícita.
+No la apliques a proyectos de clientes que tengan una marca propia. Para esos casos usa la skill `brand-implementation` y los activos aprobados por el cliente.
 
 ## Tokens de color
 
@@ -93,7 +93,7 @@ Para un proyecto nuevo de Doscientos con Tailwind v4, incorpora estos tokens en 
 
 Cuando el encargo afecte a interfaz o diseño, indica brevemente:
 
-1. Si la guía de marca aplica al proyecto o si existe un sistema aprobado que requiere confirmación.
+1. Confirmación de que el producto usa la marca Doscientos.
 2. Qué tokens, fuente y assets vas a incorporar o reutilizar.
 3. Cualquier riesgo de contraste, carga de fuentes o configuración de imágenes remotas.
 
