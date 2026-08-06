@@ -1,74 +1,41 @@
-# Doscientos AI Project Starter
+# Doscientos Technical Skill
 
-Paquete para iniciar proyectos nuevos con Codex o Augment usando la forma de trabajar de Doscientos.
+Instrucciones técnicas reutilizables de Doscientos para Codex y Augment: elección de framework, arquitectura, accesibilidad, seguridad, Supabase, calidad y proceso de desarrollo.
 
-## Qué contiene
+No es una plantilla de proyecto y no incorpora código ni historial Git al repositorio de destino.
 
-Solo las instrucciones técnicas: stack, convenciones, calidad mínima y proceso de trabajo. El briefing del cliente se lo das a la IA por chat, no en un archivo.
+## Instalar en el proyecto actual
 
-```text
-AGENTS.md
-README.md
-VERSION
-.agents/skills/doscientos-project-bootstrap/SKILL.md
-```
-
-## Crear un proyecto nuevo
-
-**Recomendado:** en GitHub, abre `doscientos/ai-tech-skill` y usa **Use this template**. Crea el repositorio del cliente desde la plantilla y ábrelo con Codex o Augment.
-
-Alternativa para añadir las instrucciones a un repositorio nuevo ya creado, en PowerShell:
-
-```powershell
-git clone --depth 1 --branch v2.1.1 https://github.com/doscientos/ai-tech-skill .starter
-Copy-Item -Recurse -Force .starter\* .
-Copy-Item -Recurse -Force .starter\.agents .
-Remove-Item -Recurse -Force .starter
-```
-
-Este repositorio es privado: Git usará tus credenciales de GitHub. Alternativa manual: copia el contenido del paquete al repositorio, incluida la carpeta oculta `.agents/`.
-
-Usa un tag concreto para que cada proyecto conserve una versión estable de las instrucciones:
+Desde la raíz del repositorio en el que vayas a trabajar:
 
 ```bash
-git clone --depth 1 --branch v2.1.1 https://github.com/doscientos/ai-tech-skill .starter
+pnpm dlx skills add PolGubau/doscientos-tech-skill --skill doscientos-project-bootstrap --agent augment,codex --copy --yes
 ```
 
-## Uso
+El comando copia la skill en la ubicación reconocida por los agentes para ese proyecto. Solo debes ejecutarlo una vez por repositorio.
 
-1. Instala el paquete en el repositorio nuevo.
-2. Abre Codex o Augment en la raíz.
-3. Describe el proyecto y pide que siga las instrucciones. Por ejemplo:
+Para actualizarla más adelante:
 
-> Desarrolla una web para Acme: necesitan un CRM completo para gestionar sus contratos. Sigue las instrucciones técnicas de Doscientos (`.agents/skills/doscientos-project-bootstrap/SKILL.md`). Analiza el repositorio, señala las preguntas bloqueantes y propón un plan por fases. No escribas código todavía.
+```bash
+pnpm dlx skills update doscientos-project-bootstrap --project --yes
+```
 
-4. Revisa el plan y responde:
+## Uso con la IA
 
-> Plan aprobado. Ejecuta la siguiente fase. Antes de cada cambio importante, explica qué vas a modificar y valida el resultado con los tests, lint y typecheck disponibles.
+Después de instalarla, abre Codex o Augment en la raíz del proyecto y describe el lead con lenguaje normal. Por ejemplo:
 
-`AGENTS.md` ya apunta a la skill, así que Codex y Augment la cargan solos. Mencionar la ruta en el primer mensaje es simplemente una garantía extra.
+> Desarrolla una web para Acme. Necesitan un CRM para gestionar contratos, clientes y renovaciones. Sigue la skill técnica de Doscientos. Analiza el repositorio y propón un plan por fases antes de escribir código.
 
-## Si el repositorio está vacío
+La skill obliga al agente a elegir el stack adecuado, no inventar requisitos de negocio, preguntar solo por bloqueos reales y esperar la aprobación del plan antes de implementar.
 
-La IA debe aplicar el stack por defecto de la skill y preguntar solo por lo que no esté cubierto:
+## Estructura
 
-- Tipo de producto y usuarios.
-- Restricciones técnicas impuestas por el cliente.
-- Dominio y cuentas de hosting ya contratadas.
-- Integraciones externas.
-- Criterios de éxito y primera entrega.
+```text
+skills/
+└── doscientos-project-bootstrap/
+    └── SKILL.md
+```
 
-## Actualizar las instrucciones
+## Publicación
 
-La fuente canónica debe vivir en un repositorio independiente. Copia una versión concreta al proyecto y conserva el número de versión en el historial Git. No uses una URL `main` como dependencia obligatoria de ejecución.
-
-Recomendación de distribución:
-
-- Repositorio: `doscientos/ai-tech-skill`.
-- Releases: tags como `v2.1.1`.
-- Instalación: plantilla de repositorio de GitHub, o `git clone` con tag en un repositorio ya creado.
-- HTTP: opcional, como URL de descarga/documentación; no como fuente única.
-
-## Alcance
-
-Este paquete es solo para proyectos nuevos. No modifica ni activa reglas en los proyectos existentes de Doscientos.
+El repositorio público se publica como `PolGubau/doscientos-tech-skill`. Cuando la organización conceda permisos de creación, puede transferirse a `doscientos/doscientos-tech-skill` sin cambiar el contenido de la skill.
