@@ -1,6 +1,6 @@
-# Doscientos Technical Skill
+# Doscientos Skills
 
-Instrucciones técnicas reutilizables de Doscientos para Codex y Augment: elección de framework, arquitectura, accesibilidad, seguridad, Supabase, calidad y proceso de desarrollo.
+Catálogo de skills reutilizables de Doscientos para Codex y Augment. La primera skill define el proceso técnico, arquitectura, accesibilidad, seguridad, Supabase y calidad de los proyectos.
 
 No es una plantilla de proyecto y no incorpora código ni historial Git al repositorio de destino.
 
@@ -9,7 +9,7 @@ No es una plantilla de proyecto y no incorpora código ni historial Git al repos
 Desde la raíz del repositorio en el que vayas a trabajar:
 
 ```bash
-pnpm dlx skills add PolGubau/doscientos-tech-skill --skill doscientos-project-bootstrap --agent augment,codex --copy --yes
+pnpm dlx skills add doscientos-es/skills --skill technical-details --agent augment,codex --copy --yes
 ```
 
 El comando copia la skill en la ubicación reconocida por los agentes para ese proyecto. Solo debes ejecutarlo una vez por repositorio.
@@ -17,7 +17,7 @@ El comando copia la skill en la ubicación reconocida por los agentes para ese p
 Para actualizarla más adelante:
 
 ```bash
-pnpm dlx skills update doscientos-project-bootstrap --project --yes
+pnpm dlx skills update technical-details --project --yes
 ```
 
 ## Uso con la IA
@@ -32,10 +32,10 @@ La skill obliga al agente a elegir el stack adecuado, no inventar requisitos de 
 
 ```text
 skills/
-└── doscientos-project-bootstrap/
+└── technical-details/
     └── SKILL.md
 ```
 
 ## Publicación
 
-El repositorio público se publica como `PolGubau/doscientos-tech-skill`. Cuando la organización conceda permisos de creación, puede transferirse a `doscientos/doscientos-tech-skill` sin cambiar el contenido de la skill.
+El repositorio público canónico es `doscientos-es/skills`. Añade cada nueva skill como una carpeta independiente dentro de `skills/`.
