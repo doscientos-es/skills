@@ -1,6 +1,6 @@
 ---
 name: doscientos-project-bootstrap
-description: Instrucciones técnicas de Doscientos para construir proyectos nuevos: selección de framework (Astro/Next.js/Vite), arquitectura, TypeScript, Tailwind, accesibilidad, Supabase, testing, rendimiento y seguridad. Usar cuando se arranca un proyecto desde cero o se reinicia formalmente su arquitectura.
+description: "Instrucciones técnicas de Doscientos para construir proyectos nuevos: selección de framework (Astro/Next.js/Vite), arquitectura, TypeScript, Tailwind, accesibilidad, Supabase, testing, rendimiento y seguridad. Usar cuando se arranca un proyecto desde cero o se reinicia formalmente su arquitectura."
 ---
 
 # Protocolo técnico Doscientos para proyectos nuevos
