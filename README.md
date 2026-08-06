@@ -14,6 +14,12 @@ pnpm dlx skills add doscientos-es/skills --skill technical-details --agent augme
 
 El comando copia la skill en la ubicación reconocida por los agentes para ese proyecto. Solo debes ejecutarlo una vez por repositorio.
 
+Para instalar la guía de marca junto a las instrucciones técnicas:
+
+```bash
+pnpm dlx skills add doscientos-es/skills --skill technical-details,branding --agent augment,codex --copy --yes
+```
+
 Para actualizarla más adelante:
 
 ```bash
@@ -32,7 +38,9 @@ La skill obliga al agente a elegir el stack adecuado, no inventar requisitos de 
 
 ```text
 skills/
-└── technical-details/
+├── technical-details/
+│   └── SKILL.md
+└── branding/
     └── SKILL.md
 ```
 
