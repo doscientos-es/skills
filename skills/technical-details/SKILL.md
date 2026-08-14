@@ -66,7 +66,7 @@ Usa siempre la versión estable más reciente compatible con el proyecto. No mez
 ## Lenguaje y configuración base
 
 - TypeScript en todo el proyecto, con `strict: true`; evita `any`.
-- Gestor de paquetes: `pnpm`, salvo que el proyecto ya utilice otro. Node >= 22.
+- Gestor de paquetes: usa siempre y sin excepciones `pnpm`; no ejecutes ni documentes comandos `npm`. Node >= 22.
 - Lint y formato: Biome en proyectos Next.js (convención actual de `backoffice`); oxlint + Prettier en proyectos Astro y Vite (convención actual de `landing`). No uses ESLint: prioriza herramientas modernas y rápidas (Biome u oxlint) sobre ESLint/Prettier tradicionales.
 - Aliases de importación, preferiblemente `@/*`.
 - Estructura de carpetas clara y escalable; evita archivos monolíticos y componentes excesivamente grandes.
@@ -82,6 +82,7 @@ Usa siempre la versión estable más reciente compatible con el proyecto. No mez
 - Evita el acoplamiento innecesario entre componentes, servicios y proveedores externos.
 - Usa funciones puras siempre que sea posible.
 - No introduzcas abstracciones prematuras; abstrae cuando exista una responsabilidad repetida o claramente independiente.
+- Nunca construyas una SPA como una única página o un único archivo. Configura un router adecuado al framework y organiza cada pantalla o flujo en su propia ruta y archivo; extrae componentes, lógica, servicios y tipos compartidos en módulos separados.
 
 ## UI y estilos
 

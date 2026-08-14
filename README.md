@@ -26,6 +26,12 @@ Para un producto, web o herramienta interna de Doscientos:
 pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-internal-brand --agent augment,codex --copy --yes
 ```
 
+Para generar una demo comercial escalable desde el contexto de un lead del MCP:
+
+```bash
+pnpm dlx skills add doscientos-es/skills --skill technical-details,lead-demo-generation --agent augment,codex --copy --yes
+```
+
 Para actualizarla más adelante:
 
 ```bash
@@ -38,7 +44,7 @@ Después de instalarla, abre Codex o Augment en la raíz del proyecto y describe
 
 > Desarrolla una web para Acme. Necesitan un CRM para gestionar contratos, clientes y renovaciones. Sigue la skill técnica de Doscientos. Analiza el repositorio y propón un plan por fases antes de escribir código.
 
-La skill obliga al agente a elegir el stack adecuado, no inventar requisitos de negocio, preguntar solo por bloqueos reales y esperar la aprobación del plan antes de implementar.
+Las skills obligan al agente a elegir el stack adecuado, no inventar requisitos de negocio y preguntar solo por bloqueos reales. `lead-demo-generation` permite avanzar con una demo solicitada explícitamente, pero mantiene confirmación humana para decisiones irreversibles.
 
 ## Estructura
 
@@ -48,7 +54,9 @@ skills/
 │   └── SKILL.md
 ├── brand-implementation/
 │   └── SKILL.md
-└── doscientos-internal-brand/
+├── doscientos-internal-brand/
+│   └── SKILL.md
+└── lead-demo-generation/
     └── SKILL.md
 ```
 
