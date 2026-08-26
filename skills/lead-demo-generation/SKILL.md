@@ -33,6 +33,7 @@ No uses un dashboard genérico, KPIs inventados, integraciones falsas presentada
 ## Arquitectura reutilizable
 
 - Para un producto interactivo futuro, usa Next.js App Router, TypeScript estricto y módulos de dominio. Usa Astro solo para una demo/landing realmente estática.
+- Usa `@doscientos/ui` como fuente por defecto de tokens, estilos y primitivos de interfaz. Importa sus estilos globales una sola vez, compón en la demo únicamente los componentes de dominio necesarios y no recrees ni modifiques localmente un primitivo que ya exista en el paquete.
 - La demo debe arrancar sin servicios externos con `DEMO_MODE=true` y datos semilla locales.
 - Define contratos de proveedor y adaptadores mock para cada integración futura. Los mocks no deben enviar emails, crear cobros ni modificar servicios externos.
 - Separa dominio, UI, datos semilla y adaptadores. Nunca concentres toda la demo en una página o archivo.
