@@ -1,6 +1,6 @@
 ---
 name: lead-demo-generation
-description: "Genera demos comerciales visuales desde un lead de Doscientos usando el MCP, sin filtrar datos del CRM y dejando una base técnica que pueda evolucionar a producto."
+description: "Genera demos comerciales visuales desde un lead de Doscientos usando el MCP, sin filtrar datos del CRM, seleccionando solo los módulos necesarios y dejando una base técnica que pueda evolucionar a producto."
 ---
 
 # Demo comercial escalable desde un lead
@@ -9,7 +9,11 @@ description: "Genera demos comerciales visuales desde un lead de Doscientos usan
 
 Cuando el equipo pida “genera una demo para el lead X”, crea una demostración visual centrada en el problema confirmado, útil en la segunda llamada y reutilizable como primera fase del proyecto. No construyas una maqueta decorativa ni afirmes funcionalidades no evidenciadas.
 
-Esta skill complementa `technical-details`. Una petición explícita de demo aprueba el alcance reversible de la demo descrito aquí; siguen requiriendo confirmación las integraciones reales, costes, datos sensibles y decisiones de arquitectura irreversibles.
+Esta skill se instala con `technical-details` y `doscientos-ecosystem`. La primera
+define el proceso técnico y la segunda selecciona los módulos reutilizables. Una
+petición explícita de demo aprueba el alcance reversible descrito aquí; siguen
+requiriendo confirmación las integraciones reales, costes, datos sensibles y
+decisiones de arquitectura irreversibles.
 
 ## Flujo obligatorio
 
@@ -18,8 +22,9 @@ Esta skill complementa `technical-details`. Una petición explícita de demo apr
 3. Lee `unknowns`, separa hechos, supuestos y preguntas. Si no hay problema, usuario o flujo principal confirmados, pregunta antes de construir.
 4. Si una nota o transcripción es imprescindible, vuelve a consultar con `includePrivateContent: true`. Esa autorización sirve solo para fundamentar el trabajo interno: no copies datos personales, notas, cantidades ni transcripciones a la demo.
 5. Localiza si ya existe un repositorio del cliente. Amplíalo si es la misma iniciativa; si no, crea `clients/<slug-cliente>/`.
-6. Presenta un plan breve: recorrido de la demo, alcance excluido, stack, módulos y riesgos. Avanza sin esperar aprobación solo para una demo explícitamente solicitada; bloquea ante una integración real, dato sensible, coste o arquitectura irreversible.
-7. Implementa y valida. Entrega una guía de demostración y una ruta concreta de promoción a producción.
+6. Lee `doscientos-ecosystem` y aplica su matriz de decisión al alcance confirmado. Antes de implementar, declara cada módulo como `adoptar`, `no aplica` o `pendiente`, con su motivo y guía canónica.
+7. Presenta un plan breve: recorrido de la demo, alcance excluido, stack, módulos y riesgos. Avanza sin esperar aprobación solo para una demo explícitamente solicitada; bloquea ante una integración real, dato sensible, coste o arquitectura irreversible.
+8. Implementa y valida. Entrega una guía de demostración y una ruta concreta de promoción a producción.
 
 ## Qué debe demostrar
 
@@ -33,7 +38,9 @@ No uses un dashboard genérico, KPIs inventados, integraciones falsas presentada
 ## Arquitectura reutilizable
 
 - Para un producto interactivo futuro, usa Next.js App Router, TypeScript estricto y módulos de dominio. Usa Astro solo para una demo/landing realmente estática.
-- Usa `@doscientos/ui` como fuente por defecto de tokens, estilos y primitivos de interfaz. Importa sus estilos globales una sola vez, compón en la demo únicamente los componentes de dominio necesarios y no recrees ni modifiques localmente un primitivo que ya exista en el paquete.
+- Si la demo tiene más de una pantalla o una URL enlazable, usa el router estándar del framework: App Router en Next.js, React Router en Vite/React y routing basado en archivos en Astro. No simules rutas con `window.location`, `location.pathname`, History API ni condicionales manuales de pantallas.
+- Si la demo usa React, adopta `@doscientos/ui` para tokens, estilos y primitivos; importa sus estilos globales una sola vez. No recrees ni modifiques localmente un primitivo que ya exista en el paquete.
+- No añadas PWA, billing, VERI*FACTU ni acciones de publicación salvo que la matriz confirme una necesidad demostrable. Una demo fiscal o de facturación usa datos sintéticos y no realiza envíos ni operaciones reales.
 - La demo debe arrancar sin servicios externos con `DEMO_MODE=true` y datos semilla locales.
 - Define contratos de proveedor y adaptadores mock para cada integración futura. Los mocks no deben enviar emails, crear cobros ni modificar servicios externos.
 - Separa dominio, UI, datos semilla y adaptadores. Nunca concentres toda la demo en una página o archivo.

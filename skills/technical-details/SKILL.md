@@ -1,6 +1,6 @@
 ---
 name: technical-details
-description: "Instrucciones técnicas de Doscientos para construir proyectos nuevos: selección de framework (Astro/Next.js/Vite), arquitectura, TypeScript, Tailwind, accesibilidad, Supabase, testing, rendimiento y seguridad. Usar cuando se arranca un proyecto desde cero o se reinicia formalmente su arquitectura."
+description: 'Instrucciones técnicas de Doscientos para construir proyectos nuevos: selección de framework (Astro/Vite/Next.js), arquitectura, TypeScript, Tailwind, Supabase, testing, rendimiento y seguridad. Para CRM, billing y portales autenticados usa junto a operational-react-supabase.'
 ---
 
 # Protocolo técnico Doscientos para proyectos nuevos
@@ -58,16 +58,23 @@ El contexto de negocio (empresa, problema, usuarios, alcance) te lo da el equipo
 Selecciona el framework según el tipo de proyecto y explica brevemente la elección antes de implementar:
 
 - **Astro**: sitios principalmente estáticos, corporativos, landing pages, blogs y proyectos orientados a SEO y rendimiento.
-- **Next.js (App Router)**: aplicaciones React, productos SaaS, dashboards, autenticación, contenido dinámico, Server Components, Server Actions o APIs integradas. Es el estándar de Doscientos para CRM, backoffice y paneles con datos y usuarios.
-- **Vite**: SPAs, herramientas internas, prototipos funcionales y aplicaciones cliente sin necesidades específicas de SSR o routing avanzado.
+- **Vite + React + TanStack Router + TanStack Query**: estándar para CRM, facturación, portales autenticados, operaciones y demos con Supabase. Son aplicaciones orientadas a usuario autenticado que no requieren SSR ni SEO; el frontend se despliega estático y la lógica privilegiada vive en Supabase Edge Functions.
+- **Next.js (App Router)**: excepción para un repositorio ya basado en Next o cuando SSR, SEO dinámico o un BFF integrado sean requisitos confirmados. No lo elijas por defecto para un CRM o dashboard Supabase.
 
 Usa siempre la versión estable más reciente compatible con el proyecto. No mezcles frameworks sin una justificación técnica clara. Si el repositorio ya tiene un framework instalado, respétalo salvo decisión explícita de reiniciar la arquitectura.
+
+## Ecosistema reutilizable
+
+Si está instalada junto a esta skill, lee `doscientos-ecosystem` antes de elegir
+dependencias compartidas. Esa skill decide cuándo evaluar UI, PWA, facturación,
+VERI*FACTU, configuración y acciones, y enlaza a sus contratos canónicos. No
+copies ni mantengas aquí sus recetas de integración.
 
 ## Lenguaje y configuración base
 
 - TypeScript en todo el proyecto, con `strict: true`; evita `any`.
 - Gestor de paquetes: usa siempre y sin excepciones `pnpm`; no ejecutes ni documentes comandos `npm`. Node >= 22.
-- Lint y formato: Biome en proyectos Next.js (convención actual de `backoffice`); oxlint + Prettier en proyectos Astro y Vite (convención actual de `landing`). No uses ESLint: prioriza herramientas modernas y rápidas (Biome u oxlint) sobre ESLint/Prettier tradicionales.
+- Lint y formato: Biome en proyectos Next.js (convención actual de `backoffice`); oxlint + oxfmt en proyectos Astro y Vite. No uses ESLint ni Prettier en un proyecto nuevo: prioriza herramientas modernas y rápidas (Biome u oxlint/oxfmt).
 - Aliases de importación, preferiblemente `@/*`.
 - Estructura de carpetas clara y escalable; evita archivos monolíticos y componentes excesivamente grandes.
 - Mantén las dependencias actualizadas y elimina las innecesarias.
@@ -116,7 +123,8 @@ Usa siempre la versión estable más reciente compatible con el proyecto. No mez
 ## Datos, backend y Supabase
 
 - Usa Supabase para autenticación, base de datos, almacenamiento y funcionalidades backend cuando el proyecto lo requiera. Tipos generados con `supabase gen types`.
-- Separa los clientes de Supabase para navegador, servidor y middleware según el framework.
+- En el estándar Vite, el navegador solo usa la URL y publishable/anon key mediante variables `VITE_*`; RLS es obligatoria. Service role, emisión de facturas, webhooks, emails y tareas programadas viven en Edge Functions, nunca en el bundle.
+- Separa los clientes de Supabase para navegador, servidor y middleware cuando el framework sí incluya servidor.
 - Nunca expongas claves privadas ni secretos en el cliente.
 - Activa Row Level Security en todas las tablas expuestas, con políticas explícitas y mínimas.
 - Valida los datos en cliente y servidor con Zod (u otra librería equivalente) en todos los límites del sistema. Trata los datos externos como no confiables.
@@ -139,6 +147,7 @@ Usa siempre la versión estable más reciente compatible con el proyecto. No mez
 ## Astro
 
 - Prefiere HTML estático y generación en build. Usa islands únicamente para interactividad real; minimiza el JavaScript enviado al navegador.
+- Usa el routing basado en archivos de Astro para cada página. No implementes rutas con `window.location`, `location.pathname`, `history` ni condicionales manuales dentro de una isla.
 - Usa integraciones oficiales cuando sean necesarias.
 - Optimiza metadatos, sitemap, canonical URLs, Open Graph y datos estructurados (`@astrojs/sitemap`, `@astrojs/rss`, `schema-dts`).
 - Usa Content Collections y MDX para contenido.
@@ -146,9 +155,9 @@ Usa siempre la versión estable más reciente compatible con el proyecto. No mez
 
 ## Vite
 
-- Usa una arquitectura de SPA clara y modular.
-- Usa React Router u otra solución de routing solo si el proyecto lo necesita.
-- Gestiona el estado global únicamente cuando el estado local o derivado no sea suficiente; evita incluir librerías de estado global por defecto.
+- Para CRM, billing, portales autenticados y demos operativas, usa Vite con React, TanStack Router y TanStack Query. Lee la skill `operational-react-supabase` antes de crear estructura o dependencias.
+- Declara rutas y validación tipada de search params con TanStack Router; no construyas un router manual con `window.location`, `location.pathname`, History API o condicionales de renderizado.
+- TanStack Query gestiona el estado remoto; el estado de UI local permanece en los componentes. No añadas una librería global por defecto.
 - Configura correctamente variables de entorno, builds y paths públicos, y verifica que assets y rutas funcionen en producción.
 
 ## Estado y formularios
@@ -161,7 +170,8 @@ Usa siempre la versión estable más reciente compatible con el proyecto. No mez
 
 ## Hosting y despliegue
 
-- Despliegue en Vercel y base de datos/almacenamiento en Supabase, salvo indicación contraria.
+- Para el estándar Vite, despliega el frontend estático en Cloudflare Pages y usa Supabase para datos, auth, storage y Edge Functions. Confirma antes el proveedor y las cuentas disponibles; no despliegues sin autorización.
+- Para proyectos existentes o necesidades confirmadas de SSR, usa el hosting compatible que ya tenga aprobado el repositorio.
 - Entornos separados (local, preview/staging, producción) con credenciales independientes. Nunca mezcles bases de datos ni claves entre entornos.
 
 ## Calidad, testing y rendimiento
