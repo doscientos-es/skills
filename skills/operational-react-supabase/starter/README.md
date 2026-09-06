@@ -23,6 +23,8 @@ No sobrescribe directorios no vacíos. Ejecuta `pnpm install` explícitamente co
 Después:
 
 1. Ejecuta `pnpm quality` y `pnpm build`.
+   Tras la primera instalación, revisa y versiona `pnpm-lock.yaml`: el workflow incluido
+   exige instalación congelada y ejecuta esos mismos comandos, sin credenciales reales.
 2. Sustituye la feature `customers` por el primer vertical aprobado.
 3. Mantén las fixtures mientras se valida el flujo. Cambia únicamente el
    adaptador en `src/features/customers/infrastructure/list-customers.ts` al
@@ -68,6 +70,16 @@ El modo de fixtures no necesita variables de entorno. `createBrowserSupabaseClie
 falla explícitamente si alguien intenta conectar datos reales sin configurarlas.
 
 ## Validación
+
+El contrato completo es `pnpm quality`, también para agentes y CI. No sustituirlo por
+un lint aislado. El starter incluye un pre-commit nativo que ejecuta `pnpm quality:quick`
+(formato + lint, sin fixes). No añade dependencias, tests/build en cada commit ni pre-push.
+
+Tras generar e inicializar el repositorio propio, revisar `.githooks/` y ejecutar
+`pnpm hooks:install` una vez por clon. No se activa con `pnpm install` ni desde el repo
+de skills. Rehúsa reemplazar hooks existentes. Necesita Node/pnpm en PATH y comprueba
+el árbol de trabajo completo, sin tocar el staging parcial ni crear stash. CI verifica
+el contenido del commit; configurar required checks en GitHub requiere un paso aparte.
 
 Advertencia conocida al revisar esta base: `src/demos` no está admitido por el checker
 estructural inspeccionado. Resolver esa incompatibilidad con una regresión antes de
