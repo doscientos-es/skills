@@ -36,6 +36,21 @@ test('creates a personalized operational project from the single starter templat
     assert.equal(packageJson.dependencies['@doscientos/ui'], '^0.1.31')
     assert.equal(packageJson.devDependencies['@doscientos/configs'], '^0.1.9')
     assert.equal(packageJson.scripts.test, 'vitest run')
+    assert.equal(packageJson.scripts['quality:quick'], 'pnpm format:check && pnpm lint')
+    assert.equal(packageJson.scripts['hooks:install'], 'node .githooks/install.mjs')
+    assert.equal(packageJson.scripts.prepare, undefined, 'generation must not silently install hooks')
+    const hook = await readFile(join(target, '.githooks', 'pre-commit'), 'utf8')
+    assert.match(hook, /exec pnpm quality:quick/)
+    assert.doesNotMatch(hook, /\r|--fix|--write|stash|git add/)
+    await readFile(join(target, '.githooks', 'install.mjs'), 'utf8')
+    assert.match(
+      await readFile(join(target, '.githooks', '.gitattributes'), 'utf8'),
+      /pre-commit text eol=lf/,
+    )
+    const workflow = await readFile(join(target, '.github', 'workflows', 'ci.yml'), 'utf8')
+    assert.match(workflow, /pnpm install --frozen-lockfile/)
+    assert.match(workflow, /pnpm quality/)
+    assert.match(workflow, /pnpm build/)
     assert.match(html, /<title>CRM Acme<\/title>/)
     assert.match(appFrame, />CRM Acme</)
     assert.doesNotMatch(html, /__APP_TITLE__/)

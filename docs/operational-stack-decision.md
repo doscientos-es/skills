@@ -7,6 +7,7 @@ dentro de la skill distribuible. Editar allí para no mantener recomendaciones d
 - [Recetas de implementación](../skills/operational-react-supabase/references/implementation-patterns.md).
 - [Pipeline y evidencia de validación](../skills/operational-react-supabase/references/delivery-pipeline.md).
 - [Contratos de UI/billing y runtime fiscal](../skills/operational-react-supabase/references/reusable-modules.md).
+- [Quality y hooks ligeros](../skills/operational-react-supabase/references/quality-gates.md).
 
 Estado: propuesta Start/Node para piloto, no migración aprobada ni cambio del generador
 Vite/Router. Las APIs, versiones y estado de release se comprueban al adoptar.

@@ -35,6 +35,11 @@ cambien arquitectura, permisos, fiscalidad o aceptación; no inventarlos para po
    Verificar que `quality` llama scripts existentes e incluye las pruebas; no asumirlo por nombre.
 5. Comprobar un arranque limpio, ruta profunda y refresh. No reutilizar un build antiguo como prueba.
 
+Unificar los controles anteriores bajo `pnpm quality` y usarlo también en CI. Aplicar
+la [receta de hooks](./quality-gates.md): pre-commit rápido de solo lectura, instalación
+explícita por clon y comprobación de que no sustituye hooks existentes. No tests/build
+en cada commit; tampoco omitir el quality completo al cerrar la tarea.
+
 **Salida:** proyecto generado que pasa sus controles, no solo tests de copia del generador.
 Si el starter falla, conservar la evidencia y corregir la causa dentro del alcance aprobado.
 No eliminar el check para tener verde ni propagar el fallo a nuevos clientes.
@@ -52,9 +57,9 @@ Una demo muestra explícitamente qué es simulado; no aparentar integraciones o 
 
 Para cada pantalla/acción completar esta matriz en `docs/demo-to-production.md`:
 
-| Acción | Fuente actual | Persistencia objetivo | Quién puede | Control servidor/RLS | Prueba | Estado |
-| --- | --- | --- | --- | --- | --- | --- |
-| Flujo acordado | Fixture/mock o real comprobado | Adaptador/migración aprobados | Rol/tenant | Dónde se comprueba | Comando/evidencia | Pendiente o verificado |
+| Acción         | Fuente actual                  | Persistencia objetivo         | Quién puede | Control servidor/RLS | Prueba            | Estado                 |
+| -------------- | ------------------------------ | ----------------------------- | ----------- | -------------------- | ----------------- | ---------------------- |
+| Flujo acordado | Fixture/mock o real comprobado | Adaptador/migración aprobados | Rol/tenant  | Dónde se comprueba   | Comando/evidencia | Pendiente o verificado |
 
 Probar sesión y expiración, RLS por operación, usuario anónimo, dos tenants, roles,
 pertenencia falsificada, descargas privadas y caché al cambiar de organización/usuario.

@@ -153,6 +153,7 @@ Sus referencias se distribuyen dentro de la propia skill, también al instalar c
 - [Pipeline de entrega](./skills/operational-react-supabase/references/delivery-pipeline.md): alcance → base → vertical → seguridad → integración → entrega, con evidencia por fase.
 - [Patrones de implementación](./skills/operational-react-supabase/references/implementation-patterns.md): archivos, loaders/Query, server functions, auth/RLS, caché y errores.
 - [Reutilizar módulos](./skills/operational-react-supabase/references/reusable-modules.md): UI/billing/fiscalidad, responsabilidades y pruebas de adaptadores.
+- [Quality y pre-commit](./skills/operational-react-supabase/references/quality-gates.md): `pnpm quality` para agentes/CI, hook rápido de solo lectura y activación explícita por clon.
 
 `docs/` conserva enlaces para humanos, no otra versión de las reglas. No confundir
 conocimiento documentado con un piloto implementado ni con una versión publicada.

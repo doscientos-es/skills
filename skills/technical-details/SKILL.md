@@ -193,6 +193,7 @@ copies ni mantengas aquí sus recetas de integración.
 - Usa Playwright o una herramienta equivalente para flujos end-to-end críticos.
 - Comprueba accesibilidad básica y responsive en los componentes principales.
 - Ejecuta formato, lint, estructura si existe, typecheck, tests y build; verifica resultado de cada comando. Añade regresión a cada bug corregido; no desactives reglas ni debilites asserts para ocultarlo.
+- Estandariza esos controles (salvo build) bajo `pnpm quality` y úsalo al cerrar tareas y en CI. `pnpm quality:quick` solo comprueba formato/lint en pre-commit. Hooks explícitos por clon; sin fixes, staging automático, pre-push pesado ni Husky/lint-staged por defecto. Lee `operational-react-supabase/references/quality-gates.md` si está instalada o su [fuente canónica](https://github.com/doscientos-es/skills/blob/main/skills/operational-react-supabase/references/quality-gates.md).
 - Clasifica cada check como PASA/FALLA/NO EJECUTADO/BLOQUEADO/NO APLICA. Tests de copia no certifican el build generado; jsdom no certifica revisión visual; tests en memoria no certifican RLS ni concurrencia real.
 - No dejes código muerto, imports sin usar, logs de depuración ni TODOs innecesarios.
 - Prioriza el rendimiento percibido y el tamaño reducido del bundle: evita JavaScript innecesario en el cliente, usa lazy loading, code splitting y carga diferida cuando proceda, y optimiza imágenes, fuentes, scripts y dependencias.

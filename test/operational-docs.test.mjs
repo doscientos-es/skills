@@ -10,6 +10,7 @@ const referenceNames = [
   'delivery-pipeline.md',
   'implementation-patterns.md',
   'reusable-modules.md',
+  'quality-gates.md',
 ]
 
 const read = (path) => readFile(path, 'utf8')

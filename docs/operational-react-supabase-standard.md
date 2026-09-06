@@ -10,6 +10,7 @@ La fuente canónica se mantiene dentro de la skill para que viaje al instalarla 
 3. [Pipeline técnico](../skills/operational-react-supabase/references/delivery-pipeline.md): fases, criterios de salida y handoff.
 4. [Implementación](../skills/operational-react-supabase/references/implementation-patterns.md): capas, rutas, Query, auth y servidor.
 5. [Módulos reutilizables](../skills/operational-react-supabase/references/reusable-modules.md): UI, billing y contratos de integración.
+6. [Quality y hooks](../skills/operational-react-supabase/references/quality-gates.md): comandos estándar y protección local/CI.
 
 El generador implementado sigue siendo Vite/Router. Start/Node es una recomendación
 sujeta a piloto aprobado y comprobado. Ni una demo con shell ni los tests de copia

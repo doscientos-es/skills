@@ -15,6 +15,7 @@ description: 'Guía operativa Doscientos para CRM, billing, portales y demos: de
 2. Nueva fase/entrega: [pipeline con puertas de salida](./references/delivery-pipeline.md).
 3. Rutas, datos, auth o servidor: [recetas de implementación](./references/implementation-patterns.md).
 4. UI, billing o integraciones: [reutilización y límites](./references/reusable-modules.md).
+5. Scripts, hooks o CI: [contrato quality y pre-commit](./references/quality-gates.md).
 
 Las referencias viven dentro de esta skill para viajar con `--copy`. Léelas antes de
 implementar el área afectada. Son la fuente canónica; los documentos de `docs/` solo enlazan.
@@ -110,7 +111,11 @@ Usa las mismas fixtures para Storybook y tests cuando sea posible. Etiqueta clar
 
 ## Calidad mínima
 
-El proyecto expone `dev`, `build`, `lint`, `format:check`, `typecheck` y `test` mediante pnpm. Antes de cerrar una fase ejecuta los checks acotados y finalmente la suite apropiada, build y revisión de secretos.
+El proyecto expone `dev`, `build`, `lint`, `format:check`, `typecheck`, `test` y `quality`
+mediante pnpm. Usa `pnpm quality` como contrato completo de cierre y CI. El pre-commit
+solo ejecuta `pnpm quality:quick` (formato y lint sin modificar archivos); no sustituye
+tests ni build. Instalar hooks explícitamente por clon con `pnpm hooks:install`, sin
+sobrescribir hooks existentes ni instalar herramientas nuevas por defecto.
 
 Documenta propósito, arranque, scripts, variables por nombre, arquitectura, modo demo,
 modelo de despliegue y operaciones de servidor. Añade `.env.example` sin valores sensibles.
