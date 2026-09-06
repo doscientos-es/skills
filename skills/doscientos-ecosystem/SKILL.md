@@ -45,7 +45,7 @@ módulos en una landing, una web editorial o una tarea que no los requiere.
 
 | Necesidad comprobada                                                                       | Adoptar                                                              | No usar automáticamente                                            | Fuente canónica                                                                                                 |
 | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| CRM, billing, portal autenticado o demo operativa con Supabase                             | Skill `operational-react-supabase` y su estándar Vite/React/TanStack | Next.js, SSR, backend propio o un router manual                    | [Skill](../operational-react-supabase/SKILL.md) y [estándar](../../docs/operational-react-supabase-standard.md) |
+| CRM, billing, portal autenticado o demo operativa con Supabase | Skill `operational-react-supabase`: SPA Vite/Router o propuesta de piloto Start/Node según operaciones | Migración, runtime Edge fiscal o un router manual por defecto | [Skill canónica](https://github.com/doscientos-es/skills/blob/main/skills/operational-react-supabase/SKILL.md) |
 | Interfaz de producto en React y Tailwind v4                                                | `@doscientos/ui`                                                     | Sitios sin React o componentes de dominio exclusivos               | [README](https://github.com/doscientos-es/ui#readme) y [Storybook](https://ui.doscientos.es)                    |
 | Proyecto TypeScript que necesite perfiles compartidos de lint, formato, tests o estructura | `@doscientos/configs`                                                | Configuración ajena que el repositorio ya haya aprobado            | [README](https://github.com/doscientos-es/configs#readme)                                                       |
 | Aplicación de uso recurrente que aporte valor instalable o funciones offline               | `@doscientos/pwa`                                                    | Landing, blog o app sin necesidad PWA validada                     | [README](https://github.com/doscientos-es/pwa#readme)                                                           |
@@ -57,13 +57,18 @@ módulos en una landing, una web editorial o una tarea que no los requiere.
 
 - **UI:** usa el paquete como primitivas; las rutas, datos, APIs, entidades y
   variaciones exclusivas del producto pertenecen a la aplicación.
+- **Versiones:** consulta exports/tipos del paquete instalado. Una API documentada en
+  main puede no estar publicada ni presente en el cliente. No copiar código para simularla.
 - **PWA:** cada aplicación posee manifest, iconos, service worker y política de
   caché. No caches APIs, autenticación ni respuestas personalizadas por defecto.
 - **Billing:** la aplicación aporta persistencia y adaptadores. Una factura
   emitida es un snapshot; no se edita ni recalcula.
+  El paquete no garantiza numeración atómica, RLS, idempotencia ni fiscalidad completa:
+  probar estos contratos en los adaptadores y consultar sus límites antes de emitir.
 - **VERI\*FACTU:** la integración es server-side. Certificados, contraseñas y
   configuración SIF nunca llegan al cliente. Lee y cumple el playbook completo
   antes de modelar ledger, outbox, reintentos o flujos de anulación.
+  Verificar runtime Node, mTLS y dependencias nativas; no asumir compatibilidad Edge.
 - **Configs:** compón perfiles y deja las excepciones locales documentadas; no
   rebajes una regla compartida para ocultar un problema de una aplicación.
 - **Actions:** fija acciones por SHA inmutable y conserva permisos y workflow

@@ -1,6 +1,6 @@
 ---
 name: technical-details
-description: 'Instrucciones técnicas de Doscientos para construir proyectos nuevos: selección de framework (Astro/Vite/Next.js), arquitectura, TypeScript, Tailwind, Supabase, testing, rendimiento y seguridad. Para CRM, billing y portales autenticados usa junto a operational-react-supabase.'
+description: 'Protocolo técnico Doscientos: alcance, selección Astro/TanStack Router/Start/Next, arquitectura, Supabase, seguridad y entrega comprobada. Para CRM, billing, portales y demos operativas usar junto a operational-react-supabase y sus referencias de pipeline e implementación.'
 ---
 
 # Protocolo técnico Doscientos para proyectos nuevos
@@ -18,7 +18,7 @@ Estas instrucciones aplican solo al proyecto que las contiene.
 ## Orden obligatorio
 
 1. Lee esta skill, `AGENTS.md`, `README.md` y la configuración existente del repositorio.
-2. Inspecciona el repositorio antes de proponer cambios: stack, scripts, dependencias, estructura, CI, despliegue, datos y variables de entorno.
+2. Inspecciona el repositorio antes de proponer cambios: stack, scripts, dependencias, estructura, CI y configuración por nombres. No leas ni vuelques valores de secretos, sesiones o credenciales.
 3. Resume lo entendido en tres bloques: problema, alcance inicial y riesgos.
 4. Separa hechos, decisiones aprobadas, supuestos y preguntas bloqueantes.
 5. Si faltan datos críticos, pregunta antes de crear arquitectura o instalar dependencias.
@@ -32,7 +32,12 @@ Estas instrucciones aplican solo al proyecto que las contiene.
 13. Añade o actualiza el README (instalación, desarrollo, testing, build) y `.env.example`.
 14. Documenta las decisiones técnicas relevantes y resume los siguientes pasos.
 
-Cuando falte información no bloqueante, elige la opción técnicamente más simple, segura, accesible y mantenible. No cambies de stack ni añadas dependencias importantes sin justificarlo.
+Cuando falte información no bloqueante, elige la opción técnicamente más simple, segura, accesible y mantenible. No cambies de stack ni añadas/cambies versiones de dependencias sin autorización.
+
+Una petición explícita y acotada ya aprueba los cambios reversibles y tests de ese alcance;
+no pidas de nuevo permiso por cada archivo. Detente ante una ampliación sustancial,
+datos reales, costes o acciones irreversibles. Distingue siempre propuesta, mock,
+implementación y validación; no uses un resumen de otra sesión como evidencia actual.
 
 ## Reglas de comunicación
 
@@ -58,10 +63,18 @@ El contexto de negocio (empresa, problema, usuarios, alcance) te lo da el equipo
 Selecciona el framework según el tipo de proyecto y explica brevemente la elección antes de implementar:
 
 - **Astro**: sitios principalmente estáticos, corporativos, landing pages, blogs y proyectos orientados a SEO y rendimiento.
-- **Vite + React + TanStack Router + TanStack Query**: estándar para CRM, facturación, portales autenticados, operaciones y demos con Supabase. Son aplicaciones orientadas a usuario autenticado que no requieren SSR ni SEO; el frontend se despliega estático y la lógica privilegiada vive en Supabase Edge Functions.
-- **Next.js (App Router)**: excepción para un repositorio ya basado en Next o cuando SSR, SEO dinámico o un BFF integrado sean requisitos confirmados. No lo elijas por defecto para un CRM o dashboard Supabase.
+- **TanStack Start + React + TanStack Query + Supabase sobre Node**: recomendación para aplicaciones operativas nuevas que necesitan servidor integrado. Requiere piloto aprobado y validado; no implica que el generador lo soporte ya.
+- **Vite + React + TanStack Router + TanStack Query**: base implementada por el generador y elección para SPA con backend ya resuelto por Supabase. Las operaciones privadas viven en un runtime compatible, no necesariamente Edge.
+- **Next.js (App Router)**: conservar en repositorios existentes; evaluar si hay requisitos específicos que lo justifiquen. No tener SEO no basta para descartarlo ni para migrar.
 
-Usa siempre la versión estable más reciente compatible con el proyecto. No mezcles frameworks sin una justificación técnica clara. Si el repositorio ya tiene un framework instalado, respétalo salvo decisión explícita de reiniciar la arquitectura.
+Para CRM, billing, portales y demos operativas, leer `operational-react-supabase` y
+sus referencias de decisión, pipeline y patrones antes de elegir. Si no está instalada,
+consultar su [fuente canónica](https://github.com/doscientos-es/skills/blob/main/skills/operational-react-supabase/SKILL.md)
+o pedir el preset correcto; no inventar otra política.
+
+Respeta versiones y lockfile existentes. Para un proyecto nuevo, comprueba releases,
+APIs y runtime oficiales, propone versiones compatibles y solicita aprobación.
+No actualizar automáticamente a latest ni mezclar frameworks por costumbre.
 
 ## Ecosistema reutilizable
 
@@ -73,11 +86,11 @@ copies ni mantengas aquí sus recetas de integración.
 ## Lenguaje y configuración base
 
 - TypeScript en todo el proyecto, con `strict: true`; evita `any`.
-- Gestor de paquetes: usa siempre y sin excepciones `pnpm`; no ejecutes ni documentes comandos `npm`. Node >= 22.
-- Lint y formato: Biome en proyectos Next.js (convención actual de `backoffice`); oxlint + oxfmt en proyectos Astro y Vite. No uses ESLint ni Prettier en un proyecto nuevo: prioriza herramientas modernas y rápidas (Biome u oxlint/oxfmt).
+- Gestor de paquetes: pnpm para proyectos Doscientos; respetar la configuración aprobada en un repo existente. Cambiar dependencias mediante el gestor, no editando a mano manifiestos/lockfiles. Node según engines y runtime; comprobar el mínimo exacto, no solo el major.
+- Lint y formato: conservar la configuración del repo. Nuevas apps operativas usan oxlint + oxfmt y perfiles de `@doscientos/configs`; no copiar Biome de un Next existente por costumbre. No añadir otro linter sin necesidad.
 - Aliases de importación, preferiblemente `@/*`.
 - Estructura de carpetas clara y escalable; evita archivos monolíticos y componentes excesivamente grandes.
-- Mantén las dependencias actualizadas y elimina las innecesarias.
+- Propón actualizaciones necesarias con impacto y pruebas; no las apliques sin autorización.
 
 ## Arquitectura
 
@@ -108,9 +121,9 @@ copies ni mantengas aquí sus recetas de integración.
 - Gestiona correctamente focus, focus-visible, estados de carga, errores y elementos modales.
 - Incluye labels, descripciones y mensajes de error accesibles.
 - No dependas únicamente del color para comunicar estados. Respeta `prefers-reduced-motion`.
-- Usa React Aria o React Aria Components para interacciones complejas y accesibles, y Base UI cuando se necesiten componentes headless, composables y accesibles compatibles con Tailwind (en Next.js, shadcn/ui sobre Radix/Base UI cubre la mayoría de casos).
-- No construyas manualmente diálogos, menús, comboboxes, tooltips, tabs o popovers complejos si React Aria, Base UI o shadcn/ui resuelven correctamente el problema.
-- No mezcles React Aria y Base UI para el mismo componente sin una razón técnica documentada.
+- En apps Doscientos, consulta primero `@doscientos/ui` y su versión instalada. React Aria sostiene sus interacciones; no copies primitivas ni agregues shadcn/Base UI por usar Next o Start.
+- Si falta una interacción, evalúa composición o mejora del paquete con tests. No construyas manualmente overlays complejos ni instales otro sistema sin justificarlo y obtener aprobación.
+- En repositorios existentes conserva el sistema aprobado, salvo cambio explícito.
 
 ## Iconos
 
@@ -123,7 +136,7 @@ copies ni mantengas aquí sus recetas de integración.
 ## Datos, backend y Supabase
 
 - Usa Supabase para autenticación, base de datos, almacenamiento y funcionalidades backend cuando el proyecto lo requiera. Tipos generados con `supabase gen types`.
-- En el estándar Vite, el navegador solo usa la URL y publishable/anon key mediante variables `VITE_*`; RLS es obligatoria. Service role, emisión de facturas, webhooks, emails y tareas programadas viven en Edge Functions, nunca en el bundle.
+- El navegador solo recibe URL y publishable/anon key mediante la configuración pública del framework; RLS es obligatoria. Secretos, emisión, webhooks y emails viven en servidor. Elegir Edge Functions solo cuando el runtime sea compatible; la fiscalidad actual requiere comprobar Node/mTLS/dependencias nativas.
 - Separa los clientes de Supabase para navegador, servidor y middleware cuando el framework sí incluya servidor.
 - Nunca expongas claves privadas ni secretos en el cliente.
 - Activa Row Level Security en todas las tablas expuestas, con políticas explícitas y mínimas.
@@ -132,7 +145,7 @@ copies ni mantengas aquí sus recetas de integración.
 - Gestiona correctamente estados de carga, vacío, error, permisos y reintento.
 - No accedas directamente a la base de datos desde componentes de presentación.
 - Usa migraciones versionadas, reversibles cuando sea razonable, pequeñas y probadas. No mezcles entornos ni uses datos reales para pruebas sin autorización.
-- No almacenes tokens sensibles en `localStorage`.
+- No guardes manualmente secretos ni copias de tokens en `localStorage`. Usa el flujo oficial de sesión de Supabase para el framework y documenta su almacenamiento; no inventes un sistema de auth paralelo. En SSR, verificar identidad y propagar cookies/refresh según el SDK vigente.
 
 ## Next.js (App Router)
 
@@ -142,7 +155,7 @@ copies ni mantengas aquí sus recetas de integración.
 - Usa `next/image`, `next/font` y `next/link` cuando corresponda.
 - Implementa `loading` y `error` boundaries cuando mejoren la experiencia.
 - No conviertas toda la aplicación en un Client Component sin una justificación clara.
-- Componentes: shadcn/ui sobre Radix/Base UI. Formularios: `react-hook-form` + `@hookform/resolvers` con Zod. Estado cliente: `zustand` solo cuando el estado local no baste. Tablas: `@tanstack/react-table`. Email transaccional: Resend con `@react-email/components`. Logs: `pino`. IA, si aplica: SDK `ai` con `@ai-sdk/*`, salida validada con Zod.
+- La elección de Next no autoriza una lista de dependencias. Reutiliza UI y utilidades aprobadas; evalúa formularios, tablas, email, logs e IA solo cuando el alcance lo requiera.
 
 ## Astro
 
@@ -155,7 +168,7 @@ copies ni mantengas aquí sus recetas de integración.
 
 ## Vite
 
-- Para CRM, billing, portales autenticados y demos operativas, usa Vite con React, TanStack Router y TanStack Query. Lee la skill `operational-react-supabase` antes de crear estructura o dependencias.
+- Si se ha elegido SPA, usa Vite con React, TanStack Router y Query. Si se necesita servidor integrado, evalúa el piloto Start descrito en `operational-react-supabase`; no fuerces la SPA por no necesitar SEO.
 - Declara rutas y validación tipada de search params con TanStack Router; no construyas un router manual con `window.location`, `location.pathname`, History API o condicionales de renderizado.
 - TanStack Query gestiona el estado remoto; el estado de UI local permanece en los componentes. No añadas una librería global por defecto.
 - Configura correctamente variables de entorno, builds y paths públicos, y verifica que assets y rutas funcionen en producción.
@@ -170,7 +183,7 @@ copies ni mantengas aquí sus recetas de integración.
 
 ## Hosting y despliegue
 
-- Para el estándar Vite, despliega el frontend estático en Cloudflare Pages y usa Supabase para datos, auth, storage y Edge Functions. Confirma antes el proveedor y las cuentas disponibles; no despliegues sin autorización.
+- Para Vite, usa hosting estático aprobado (Cloudflare Pages es una opción) y backend compatible. Para Start con server functions, se necesita runtime servidor aunque la UI use SPA mode. Confirmar proveedor/cuenta/artefacto; no desplegar sin autorización.
 - Para proyectos existentes o necesidades confirmadas de SSR, usa el hosting compatible que ya tenga aprobado el repositorio.
 - Entornos separados (local, preview/staging, producción) con credenciales independientes. Nunca mezcles bases de datos ni claves entre entornos.
 
@@ -179,7 +192,8 @@ copies ni mantengas aquí sus recetas de integración.
 - Escribe tests unitarios (Vitest) para lógica de negocio y utilidades, y tests de integración para flujos importantes.
 - Usa Playwright o una herramienta equivalente para flujos end-to-end críticos.
 - Comprueba accesibilidad básica y responsive en los componentes principales.
-- Ejecuta lint, typecheck, tests y build antes de considerar terminado el trabajo. Corrige los errores reales; no desactives reglas para ocultarlos.
+- Ejecuta formato, lint, estructura si existe, typecheck, tests y build; verifica resultado de cada comando. Añade regresión a cada bug corregido; no desactives reglas ni debilites asserts para ocultarlo.
+- Clasifica cada check como PASA/FALLA/NO EJECUTADO/BLOQUEADO/NO APLICA. Tests de copia no certifican el build generado; jsdom no certifica revisión visual; tests en memoria no certifican RLS ni concurrencia real.
 - No dejes código muerto, imports sin usar, logs de depuración ni TODOs innecesarios.
 - Prioriza el rendimiento percibido y el tamaño reducido del bundle: evita JavaScript innecesario en el cliente, usa lazy loading, code splitting y carga diferida cuando proceda, y optimiza imágenes, fuentes, scripts y dependencias.
 - Evita renders innecesarios y efectos con dependencias incorrectas. No optimices prematuramente sin evidencia, pero corrige problemas claros de rendimiento.
@@ -217,7 +231,7 @@ Una fase está terminada cuando:
 
 - Cumple sus criterios de aceptación.
 - El código está integrado en la estructura existente.
-- Los tests relevantes pasan; lint, typecheck y build pasan o sus fallos están explicados.
+- Los checks requeridos pasan. Explicar un fallo o no ejecutar una prueba no la convierte en aprobada; cualquier entrega parcial debe identificarse y aceptarse explícitamente.
 - No quedan secretos, TODOs críticos ni supuestos ocultos.
 - El README y `.env.example` reflejan cómo instalar, desarrollar, testear y construir el proyecto.
 - Se indica claramente qué queda fuera de alcance.
@@ -234,4 +248,6 @@ Tras inspeccionar el repositorio, no empieces programando. Devuelve:
 6. Plan de fases con criterios de aceptación.
 7. Comandos de validación previstos.
 
-Solo después de recibir aprobación explícita debes implementar.
+Implementa cuando el alcance esté aprobado, incluida una petición explícita acotada.
+El siguiente agente debe recibir decisiones, archivos, comandos/resultados y bloqueos
+en documentación versionada, no solo un resumen de chat. No guardar razonamiento interno.

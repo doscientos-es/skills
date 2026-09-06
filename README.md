@@ -44,6 +44,21 @@ Para un CRM, portal autenticado, facturación o demo operativa con Supabase:
 pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ecosystem,operational-react-supabase --agent augment,codex --copy --yes
 ```
 
+Si la decisión es SPA Vite/Router, genera primero el repositorio y después instala
+el preset anterior dentro de él. La CLI actual no genera TanStack Start:
+
+```bash
+pnpm dlx @doscientos/create-operational-app mi-crm --title "CRM Acme"
+```
+
+La CLI crea el stack, `@doscientos/ui`, configuraciones compartidas y pruebas,
+pero no instala dependencias salvo que se añada `--install`; nunca sobrescribe
+un directorio no vacío. Revisa su salida, ejecuta los checks y confirma el
+modelo, RLS e integraciones antes de conectar datos reales.
+
+Para servidor integrado, seguir la [decisión Start/Node](./skills/operational-react-supabase/references/stack-decision.md):
+es un piloto que necesita aprobación y validación, no un flag alternativo del generador.
+
 Para ese mismo tipo de aplicación de cliente con una identidad visual aprobada:
 
 ```bash
@@ -59,7 +74,7 @@ pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ec
 Para generar una demo comercial escalable desde el contexto de un lead del MCP:
 
 ```bash
-pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ecosystem,lead-demo-generation --agent augment,codex --copy --yes
+pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ecosystem,operational-react-supabase,lead-demo-generation --agent augment,codex --copy --yes
 ```
 
 | Tipo de repositorio                               | Preset que se ejecuta                                       |
@@ -69,7 +84,7 @@ pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ec
 | CRM, billing o portal Supabase                    | Añade `operational-react-supabase`                          |
 | CRM, billing o portal Supabase con marca aprobada | Añade `operational-react-supabase` y `brand-implementation` |
 | Producto, web o herramienta interna               | Añade `doscientos-internal-brand`                           |
-| Demo comercial basada en un lead                  | Añade `lead-demo-generation`                                |
+| Demo comercial basada en un lead                  | Añade `operational-react-supabase` y `lead-demo-generation` |
 
 Ejecuta el comando que corresponda al repositorio, incluido el preset compuesto
 para una aplicación operativa de cliente. No combines una skill de marca interna
@@ -81,7 +96,7 @@ Desde la raíz de un repositorio nuevo o del repositorio de la iniciativa, insta
 una sola vez el preset de demo:
 
 ```bash
-pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ecosystem,lead-demo-generation --agent augment,codex --copy --yes
+pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ecosystem,operational-react-supabase,lead-demo-generation --agent augment,codex --copy --yes
 ```
 
 Revisa y commitea los archivos creados. Después, abre el agente en esa misma raíz
@@ -129,9 +144,34 @@ facturación, VERI*FACTU y acciones, y enlaza a la documentación canónica de c
 módulo. Los contratos y recetas permanecen junto al código del módulo para evitar
 duplicación y divergencias.
 
-El estándar para CRM, facturación y portales autenticados está descrito en
-[`docs/operational-react-supabase-standard.md`](./docs/operational-react-supabase-standard.md)
-y lo ejecuta la skill `operational-react-supabase`.
+## Manual técnico para proyectos operativos
+
+Punto de entrada: [`operational-react-supabase`](./skills/operational-react-supabase/SKILL.md).
+Sus referencias se distribuyen dentro de la propia skill, también al instalar con `--copy`:
+
+- [Elegir stack](./skills/operational-react-supabase/references/stack-decision.md): Router frente a Start/Node, runtime y requisitos del piloto.
+- [Pipeline de entrega](./skills/operational-react-supabase/references/delivery-pipeline.md): alcance → base → vertical → seguridad → integración → entrega, con evidencia por fase.
+- [Patrones de implementación](./skills/operational-react-supabase/references/implementation-patterns.md): archivos, loaders/Query, server functions, auth/RLS, caché y errores.
+- [Reutilizar módulos](./skills/operational-react-supabase/references/reusable-modules.md): UI/billing/fiscalidad, responsabilidades y pruebas de adaptadores.
+
+`docs/` conserva enlaces para humanos, no otra versión de las reglas. No confundir
+conocimiento documentado con un piloto implementado ni con una versión publicada.
+Actualizar las copias de clientes requiere un PR de adopción; editar esta fuente no
+las modifica automáticamente. En herramientas internas operativas, añadir también
+`operational-react-supabase` al preset interno.
+
+### Validar cambios en las guías
+
+Desde este repositorio, sin nuevas dependencias ni servicios externos:
+
+<augment_code_snippet mode="EXCERPT">
+````bash
+node --test test/operational-docs.test.mjs skills/operational-react-supabase/test/create-operational-app.test.mjs
+````
+</augment_code_snippet>
+
+Verifica enlaces locales, cierre de referencias dentro de la skill, presets y regresiones
+del generador. No certifica el build del proyecto generado ni ejecuta la CLI externa de skills.
 
 ## Uso con la IA
 
@@ -151,7 +191,8 @@ skills/
 ├── technical-details/
 │   └── SKILL.md
 ├── operational-react-supabase/
-│   └── SKILL.md
+│   ├── SKILL.md
+│   └── references/       # decisión, pipeline, implementación y reutilización
 ├── brand-implementation/
 │   └── SKILL.md
 ├── doscientos-internal-brand/

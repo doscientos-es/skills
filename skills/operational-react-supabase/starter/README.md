@@ -8,32 +8,49 @@ dominio.
 
 ## Uso
 
-1. Copia el contenido de esta carpeta a un **repositorio nuevo**, no a
-   `@doscientos/ui` ni a un cliente existente.
-2. Cambia el nombre del paquete, el título de `index.html` y la feature
-   `customers` por el primer vertical aprobado.
-3. Ejecuta `pnpm install` y después `pnpm quality` y `pnpm build`.
-4. Mantén las fixtures mientras se valida el flujo. Sustituye únicamente el
+Genera un **repositorio nuevo**, no una carpeta dentro de `@doscientos/ui` ni
+de un cliente existente:
+
+```bash
+pnpm dlx @doscientos/create-operational-app mi-crm --title "CRM Acme"
+```
+
+La CLI asigna el nombre del paquete desde el directorio y el título desde
+`--title`; usa `--name @acme/mi-crm` si necesitas un nombre de paquete distinto.
+No sobrescribe directorios no vacíos. Ejecuta `pnpm install` explícitamente con
+`--install`, o hazlo tras revisar el proyecto generado.
+
+Después:
+
+1. Ejecuta `pnpm quality` y `pnpm build`.
+2. Sustituye la feature `customers` por el primer vertical aprobado.
+3. Mantén las fixtures mientras se valida el flujo. Cambia únicamente el
    adaptador en `src/features/customers/infrastructure/list-customers.ts` al
    conectar Supabase.
-5. Añade una migración y políticas RLS antes de leer datos reales. Las
-   mutaciones privilegiadas se implementan en `supabase/functions/`.
+4. Añade una migración y políticas RLS antes de leer datos reales, en un entorno
+   autorizado. Las mutaciones privilegiadas viven en un backend compatible;
+   `supabase/functions/` solo si Edge soporta esa operación y sus dependencias.
 
 No instales TanStack Start, Next.js, un servidor Node ni una librería de estado
 global por defecto. No reutilices las entidades, nombres, datos ni textos de
 este ejemplo como requisitos de un cliente.
 
+Esta plantilla es Vite/Router, no Start. Para servidor integrado, consultar la
+[decisión canónica](https://github.com/doscientos-es/skills/blob/main/skills/operational-react-supabase/references/stack-decision.md)
+y validar un piloto aprobado. El transporte fiscal actual no debe suponerse compatible
+con Edge. Instalar el preset operativo dentro del repositorio para conservar estas guías.
+
 ## Contrato de la plantilla
 
-| Área | Propósito |
-| --- | --- |
-| `src/app` | Inicialización de Query, router y shell; compone las features. |
-| `src/routes` | Rutas de TanStack Router y validación de URL; `routeTree.gen.ts` es generado. |
-| `src/features/customers` | UI, aplicación e infraestructura del vertical de ejemplo. |
-| `src/shared/lib/supabase` | Constructor del cliente de navegador; no lo invoques desde componentes. |
-| `src/demos` | Fixtures sintéticas reutilizables por los adaptadores y tests. |
-| `supabase/migrations` | Migraciones pequeñas y versionadas, tras aprobar el modelo de datos. |
-| `supabase/functions` | Operaciones con secretos, permisos adicionales o efectos externos. |
+| Área                      | Propósito                                                                     |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| `src/app`                 | Inicialización de Query, router y shell; compone las features.                |
+| `src/routes`              | Rutas de TanStack Router y validación de URL; `routeTree.gen.ts` es generado. |
+| `src/features/customers`  | UI, aplicación e infraestructura del vertical de ejemplo.                     |
+| `src/shared/lib/supabase` | Constructor del cliente de navegador; no lo invoques desde componentes.       |
+| `src/demos`               | Fixtures sintéticas reutilizables por los adaptadores y tests.                |
+| `supabase/migrations`     | Migraciones pequeñas y versionadas, tras aprobar el modelo de datos.          |
+| `supabase/functions`      | Operaciones Edge cuando el runtime y el alcance lo permitan.                  |
 
 La URL pertenece a TanStack Router, la caché remota a TanStack Query y las
 primitivas visuales a `@doscientos/ui`. La feature conserva la lógica de
@@ -51,6 +68,11 @@ El modo de fixtures no necesita variables de entorno. `createBrowserSupabaseClie
 falla explícitamente si alguien intenta conectar datos reales sin configurarlas.
 
 ## Validación
+
+Advertencia conocida al revisar esta base: `src/demos` no está admitido por el checker
+estructural inspeccionado. Resolver esa incompatibilidad con una regresión antes de
+adoptar la plantilla; no eliminar el check. Los tests de generación solo verifican la
+copia/personalización, no garantizan que estos comandos pasen.
 
 - `pnpm format:check`: formato compartido.
 - `pnpm lint`: reglas de React/Vite y capas de features.
