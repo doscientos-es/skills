@@ -30,11 +30,10 @@ No promover reglas específicas del cliente a UI/billing sin un contrato reutili
 
 Conservar los entrypoints que exige la versión de Start (`router`, `start`, cliente/servidor)
 y ajustar el checker mediante una excepción concreta y probada si hace falta, no desactivarlo.
-El checker inspeccionado tampoco admite sufijos `.server.ts`/`.functions.ts`: los nombres
+`src/demos` está admitido para fixtures deterministas. El checker inspeccionado todavía
+no admite sufijos `.server.ts`/`.functions.ts`: los nombres
 de la tabla son la convención propuesta para Start, pendiente de soporte y regresiones en
 `@doscientos/configs`. No renombrarlos a archivos client-safe para ocultar el fallo.
-El starter Vite actual tiene `src/demos`, que no admite el checker inspeccionado; es una
-incompatibilidad conocida pendiente de resolver, no una convención nueva que propagar.
 Ubicar nuevas fixtures junto al vertical cuando el perfil aprobado lo permita.
 
 ## 2. Ruta → Query → datos

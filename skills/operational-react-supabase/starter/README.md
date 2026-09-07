@@ -81,10 +81,9 @@ de skills. Rehúsa reemplazar hooks existentes. Necesita Node/pnpm en PATH y com
 el árbol de trabajo completo, sin tocar el staging parcial ni crear stash. CI verifica
 el contenido del commit; configurar required checks en GitHub requiere un paso aparte.
 
-Advertencia conocida al revisar esta base: `src/demos` no está admitido por el checker
-estructural inspeccionado. Resolver esa incompatibilidad con una regresión antes de
-adoptar la plantilla; no eliminar el check. Los tests de generación solo verifican la
-copia/personalización, no garantizan que estos comandos pasen.
+Los tests de generación solo verifican la copia/personalización, no garantizan que estos
+comandos pasen. No eliminar un check para ocultar una incompatibilidad: aislarla, añadir
+una regresión en `@doscientos/configs` y corregir la regla o la plantilla deliberadamente.
 
 - `pnpm format:check`: formato compartido.
 - `pnpm lint`: reglas de React/Vite y capas de features.
