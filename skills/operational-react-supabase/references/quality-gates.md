@@ -69,8 +69,10 @@ No borrar archivos ni otros hooks. No hacer esta desactivación para saltarse va
 - Primero configs/UI y módulos compartidos críticos; billing y starter llevan la receta
   para activarla cuando tengan repositorio propio. No ejecutar el instalador del starter
   dentro del repositorio de skills: debe negarse a modificar el repo padre.
-- Cliente existente/backoffice: adopción separada, con baseline medido y sin cambios de
-  linter, formato masivo o dependencias implícitos. No distribuir hooks fallidos por decreto.
+- Backoffice y la landing incluyen el contrato y la receta, pero se activan por clon solo
+  después de que su baseline de `quality:quick` esté verde. Ante deuda previa, mantener
+  el hook inactivo y planificar una limpieza revisable; no hacer formato masivo ni
+  distribuir un hook que bloquearía todos los commits.
 - CI: checkout, Node/pnpm aprobados, instalación con lockfile congelado, `pnpm quality`
   y `pnpm build` cuando exista. Storybook/E2E/seguridad en jobs explícitos, con entornos seguros.
 - El starter incluye un `pnpm-lock.yaml` versionado, por lo que su CI puede usar
