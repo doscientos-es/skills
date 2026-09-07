@@ -28,6 +28,7 @@ test('creates a personalized operational project from the single starter templat
     const target = join(directory, 'acme-crm')
     const result = await runCli([target, '--name', '@acme/crm', '--title', 'CRM Acme'])
     const packageJson = JSON.parse(await readFile(join(target, 'package.json'), 'utf8'))
+    const lockfile = await readFile(join(target, 'pnpm-lock.yaml'), 'utf8')
     const html = await readFile(join(target, 'index.html'), 'utf8')
     const appFrame = await readFile(join(target, 'src', 'app', 'app-frame.tsx'), 'utf8')
 
@@ -39,6 +40,7 @@ test('creates a personalized operational project from the single starter templat
     assert.equal(packageJson.scripts['quality:quick'], 'pnpm format:check && pnpm lint')
     assert.equal(packageJson.scripts['hooks:install'], 'node .githooks/install.mjs')
     assert.equal(packageJson.scripts.prepare, undefined, 'generation must not silently install hooks')
+    assert.match(lockfile, /^lockfileVersion:/m)
     const hook = await readFile(join(target, '.githooks', 'pre-commit'), 'utf8')
     assert.match(hook, /exec pnpm quality:quick/)
     assert.doesNotMatch(hook, /\r|--fix|--write|stash|git add/)

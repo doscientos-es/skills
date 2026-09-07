@@ -25,7 +25,6 @@ jobs:
         with:
           node-version: 22.18.0
           cache: pnpm
-      # Generate and commit pnpm-lock.yaml after the first local install.
       - run: pnpm install --frozen-lockfile
       - run: pnpm quality
       - run: pnpm build

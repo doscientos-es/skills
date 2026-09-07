@@ -15,13 +15,13 @@ Conservar Husky/Lefthook existente si funciona: no migrar solo por uniformidad.
 
 ## Contrato de comandos
 
-| Comando | Qué hace | Cuándo |
-| --- | --- | --- |
-| `pnpm format` | Formatea deliberadamente; modifica archivos | Editor/desarrollador revisa el diff |
-| `pnpm quality:quick` | `pnpm format:check && pnpm lint`, sin fixes | Pre-commit y feedback rápido |
-| `pnpm quality` | Formato, lint, estructura si aplica, tipos y tests pertinentes | Antes de cerrar una tarea y en CI |
-| `pnpm build` | Artefacto real; no forma parte del pre-commit | CI y validación de entrega |
-| `pnpm hooks:install` | Instala el hook en la configuración Git local | Una vez por clon tras revisarlo |
+| Comando              | Qué hace                                                       | Cuándo                              |
+| -------------------- | -------------------------------------------------------------- | ----------------------------------- |
+| `pnpm format`        | Formatea deliberadamente; modifica archivos                    | Editor/desarrollador revisa el diff |
+| `pnpm quality:quick` | `pnpm format:check && pnpm lint`, sin fixes                    | Pre-commit y feedback rápido        |
+| `pnpm quality`       | Formato, lint, estructura si aplica, tipos y tests pertinentes | Antes de cerrar una tarea y en CI   |
+| `pnpm build`         | Artefacto real; no forma parte del pre-commit                  | CI y validación de entrega          |
+| `pnpm hooks:install` | Instala el hook en la configuración Git local                  | Una vez por clon tras revisarlo     |
 
 Todos los scripts deben existir. Paquetes JS sin compilación TypeScript pueden omitir
 typecheck justificándolo; no crear scripts vacíos para aparentar cobertura. Los tests
@@ -73,9 +73,9 @@ No borrar archivos ni otros hooks. No hacer esta desactivación para saltarse va
   linter, formato masivo o dependencias implícitos. No distribuir hooks fallidos por decreto.
 - CI: checkout, Node/pnpm aprobados, instalación con lockfile congelado, `pnpm quality`
   y `pnpm build` cuando exista. Storybook/E2E/seguridad en jobs explícitos, con entornos seguros.
-- El starter no incluye lockfile generado: instalar dependencias y versionar el lockfile
-  antes de esperar CI verde. Sus bloqueos estructurales documentados siguen pendientes;
-  añadir el workflow no los corrige ni certifica la plantilla.
+- El starter incluye un `pnpm-lock.yaml` versionado, por lo que su CI puede usar
+  `--frozen-lockfile` desde el primer commit. Renovarlo deliberadamente al cambiar
+  dependencias; no eliminarlo para sortear una instalación no reproducible.
 - Configurar required checks/reglas de rama en GitHub con autorización. Añadir YAML al
   disco no activa protección de ramas ni demuestra que GitHub haya ejecutado el workflow.
 - Probar el instalador (idempotencia, conflictos, repo anidado), rechazo/éxito del hook y
