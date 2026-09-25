@@ -6,6 +6,14 @@ No es una plantilla de proyecto y no incorpora código ni historial Git al repos
 
 ## Modelo de distribución
 
+Para mantener novedades públicas o internas hay una skill independiente,
+[`product-changelog`](./skills/product-changelog/SKILL.md), que incluye el CLI
+incremental y un contrato Markdown → JSON. Se instala por repositorio igual que
+las otras skills. `CHANGELOG.md` y el JSON se versionan juntos; cada frontend
+importa el JSON y lo presenta con su propio diseño. La primera adopción requiere
+elegir explícitamente el commit base; después basta pedir «actualiza el
+changelog de <producto>». No equivale a una publicación automática.
+
 Las skills se distribuyen **por repositorio**, no por ordenador:
 
 1. La fuente canónica es este repositorio, `doscientos-es/skills`.
