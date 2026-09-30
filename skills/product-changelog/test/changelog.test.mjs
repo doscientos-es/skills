@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, writeFileSync, unlinkSync, existsSync } from 'node:fs'
+import { mkdtempSync, readFileSync, writeFileSync, unlinkSync, existsSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -81,4 +81,14 @@ test('rechaza historia divergente, HEAD cambiado, fechas y categorías inválida
 test('acepta Markdown con un solo salto de línea final', () => {
   const markdown = `# Novedades\n\n<!-- changelog:cursor=${'a'.repeat(40)} -->\n\n## 2026-09-24 — Novedad\n\n### Mejoras\n\n- Texto sencillo.\n`
   assert.equal(parseChangelog(markdown).releases[0].sections[0].items[0], 'Texto sencillo.')
+})
+
+test('sync genera el JSON sin necesitar metadatos Git', (t) => {
+  const cwd = mkdtempSync(join(tmpdir(), 'product-changelog-no-git-'))
+  t.after(() => rmSync(cwd, { recursive: true, force: true }))
+  const markdown = `# Novedades\n\n<!-- changelog:cursor=${'a'.repeat(40)} -->\n\n## 2026-09-24 — Novedad\n\n### Mejoras\n\n- Texto sencillo.\n`
+  writeFileSync(join(cwd, 'CHANGELOG.md'), markdown)
+  const result = spawnSync(process.execPath, [cli, 'sync', 'changelog.json'], { cwd, encoding: 'utf8' })
+  assert.equal(result.status, 0, result.stderr)
+  assert.equal(JSON.parse(readFileSync(join(cwd, 'changelog.json'), 'utf8')).releases[0].title, 'Novedad')
 })

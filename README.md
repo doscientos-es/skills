@@ -14,12 +14,12 @@ importa el JSON y lo presenta con su propio diseño. La primera adopción requie
 elegir explícitamente el commit base; después basta pedir «actualiza el
 changelog de <producto>». No equivale a una publicación automática.
 
-La skill y el CLI se preparan para distribuirse juntos: la skill se copia al
-repositorio y el paquete npm se instala como herramienta de desarrollo cuando
-esté publicado. Desde la carpeta de la skill, ejecuta
+La skill se copia al repositorio y el paquete `@doscientos/changelog` se instala
+como dependencia de desarrollo. Desde la carpeta de la skill, ejecuta
 `npm run release:check` para probar el CLI y verificar que el tarball solo
-incluya los archivos públicos permitidos. La publicación sigue siendo manual;
-consulta las instrucciones de la [skill](./skills/product-changelog/README.md).
+incluya los archivos públicos permitidos. Las versiones se publican con la
+acción npm auto-release; la primera publicación requiere autenticación inicial.
+Consulta las instrucciones de la [skill](./skills/product-changelog/README.md).
 
 Las skills se distribuyen **por repositorio**, no por ordenador:
 

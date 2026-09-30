@@ -12,17 +12,14 @@ para usar el flujo con Augment o Codex.
 
 ## Instalar
 
-Cuando el paquete esté publicado:
+Instala el CLI compartido como dependencia de desarrollo:
 
 ```bash
-npm install --save-dev @doscientos/changelog
+pnpm add -D @doscientos/changelog
 ```
 
-O úsalo directamente sin añadirlo al manifiesto:
-
-```bash
-npx --yes @doscientos/changelog plan
-```
+El CLI se ejecuta localmente desde los scripts de la app y no se descarga en
+cada build.
 
 Instala además la skill desde el repositorio de skills, en la raíz del proyecto:
 
@@ -42,7 +39,7 @@ ancestro de `HEAD`; `init` solo crea el marcador, no redacta entradas:
 
 ```bash
 git rev-parse <commit-base>
-npx changelog init <sha-completo>
+pnpm exec changelog init <sha-completo>
 ```
 
 Configura el destino JSON que importará tu frontend y añade scripts al
@@ -58,12 +55,13 @@ ruta:
 }
 ```
 
-Ejecuta `changelog:sync` una vez para generar el JSON y `changelog:check` en CI.
+Haz que `dev` y `build` ejecuten `pnpm changelog:sync` antes de iniciar. Ejecuta
+`changelog:check` en CI para detectar si el JSON versionado quedó desactualizado.
 El frontend importa ese JSON; no necesita analizar Markdown en producción.
 
 ## Actualizar
 
-1. Inspecciona el estado del repositorio y ejecuta `npx changelog plan`.
+1. Inspecciona el estado del repositorio y ejecuta `pnpm exec changelog plan`.
 2. Revisa los commits incluidos y sus PRs si tienes acceso. Git no demuestra que
    un cambio haya llegado a producción.
 3. Redacta y revisa un borrador `draft.json` con este formato:
@@ -79,9 +77,9 @@ El frontend importa ese JSON; no necesita analizar Markdown en producción.
 4. Añade la entrada y actualiza el artefacto:
 
 ```bash
-npx changelog add <sha-de-plan> <AAAA-MM-DD> "Título" draft.json
-npx changelog sync src/data/changelog.json
-npx changelog sync src/data/changelog.json --check
+pnpm exec changelog add <sha-de-plan> <AAAA-MM-DD> "Título" draft.json
+pnpm changelog:sync
+pnpm changelog:check
 ```
 
 `add` solo acepta el `HEAD` actual, exige commits pendientes y usa un lock
@@ -98,13 +96,7 @@ aprobados para el público del changelog.
 
 ## Desarrollo y publicación
 
-Desde esta carpeta, ejecuta `npm run release:check` antes de empaquetar. La
-comprobación prueba el CLI y el contenido del paquete generado. Para una
-publicación manual, tras revisar el nombre en npm, la versión y el repositorio:
-
-```bash
-npm publish --access public
-```
-
-La publicación requiere permisos npm para el ámbito `@doscientos`; no se ejecuta
-automáticamente desde este repositorio.
+Desde esta carpeta, ejecuta `npm run release:check` antes de publicar. La
+comprobación prueba el CLI y el contenido del paquete generado. Las versiones se
+publican desde GitHub Actions con npm Trusted Publishing después de la primera
+publicación autorizada del paquete.

@@ -90,7 +90,9 @@ export function renderRelease(date, title, sections) {
 }
 
 function run([command, ...args]) {
-  const head = commit('HEAD')
+  // JSON projection only reads CHANGELOG.md; it must also work where builds
+  // receive source files without Git history.
+  const head = command === 'sync' ? null : commit('HEAD')
   if (command === 'init') {
     if (existsSync('CHANGELOG.md')) throw new Error('CHANGELOG.md ya existe')
     if (!args[0] || !SHA.test(args[0])) throw new Error('Indica el SHA completo inicial')

@@ -7,18 +7,23 @@ import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 const packageRoot = fileURLToPath(new URL('..', import.meta.url))
+const runNpm = (args, options) => spawnSync('npm', args, {
+  ...options,
+  shell: process.platform === 'win32',
+})
 
 test('el tarball contiene solo los archivos públicos esperados y se instala sin dependencias', (t) => {
   const temp = mkdtempSync(join(tmpdir(), 'changelog-package-'))
   t.after(() => rmSync(temp, { recursive: true, force: true }))
 
-  const packed = spawnSync('npm', ['pack', '--json', '--pack-destination', temp], {
+  const packed = runNpm(['pack', '--json', '--pack-destination', temp], {
     cwd: packageRoot,
     encoding: 'utf8',
   })
   assert.equal(packed.status, 0, packed.stderr)
   const [archive] = JSON.parse(packed.stdout)
-  assert.match(archive.filename, /changelog-0\.1\.0\.tgz$/)
+  const { version } = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'))
+  assert.equal(archive.filename, `doscientos-changelog-${version}.tgz`)
   assert.deepEqual(
     archive.files.map(({ path }) => path).sort(),
     ['LICENSE', 'README.md', 'SKILL.md', 'bin/changelog.mjs', 'package.json'].sort(),
@@ -36,7 +41,7 @@ test('el tarball contiene solo los archivos públicos esperados y se instala sin
   execFileSync('git', ['commit', '-qm', 'base'], { cwd: project })
 
   const tarball = join(temp, archive.filename)
-  const install = spawnSync('npm', ['install', '--offline', '--ignore-scripts', '--no-save', '--package-lock=false', tarball], {
+  const install = runNpm(['install', '--offline', '--ignore-scripts', '--no-save', '--package-lock=false', tarball], {
     cwd: project,
     encoding: 'utf8',
   })
@@ -45,7 +50,7 @@ test('el tarball contiene solo los archivos públicos esperados y se instala sin
   const base = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: project, encoding: 'utf8' }).trim()
   const init = spawnSync(process.execPath, [cli, 'init', base], { cwd: project, encoding: 'utf8' })
   assert.equal(init.status, 0, init.stderr)
-  const plan = spawnSync('npm', ['exec', '--offline', '--', 'changelog', 'plan'], {
+  const plan = runNpm(['exec', '--offline', '--', 'changelog', 'plan'], {
     cwd: project,
     encoding: 'utf8',
   })
