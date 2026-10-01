@@ -9,7 +9,6 @@ dist/
 .turbo/
 *.tgz
 *.tsbuildinfo
-skills/product-changelog/LICENSE
 
 # Local configuration and logs
 .env

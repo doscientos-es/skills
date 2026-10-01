@@ -7,7 +7,7 @@ No es una plantilla de proyecto y no incorpora código ni historial Git al repos
 ## Modelo de distribución
 
 Para mantener novedades públicas o internas hay una skill independiente,
-[`changelog`](./skills/product-changelog/SKILL.md), que incluye el CLI
+[`changelog`](./skills/product-changelog/SKILL.md), que usa el CLI
 incremental y un contrato Markdown → JSON. Se instala por repositorio igual que
 las otras skills. `CHANGELOG.md` y el JSON se versionan juntos; cada frontend
 importa el JSON y lo presenta con su propio diseño. La primera adopción requiere
@@ -15,11 +15,9 @@ elegir explícitamente el commit base; después basta pedir «actualiza el
 changelog de <producto>». No equivale a una publicación automática.
 
 La skill se copia al repositorio y el paquete `@doscientos/changelog` se instala
-como dependencia de desarrollo. Desde la carpeta de la skill, ejecuta
-`npm run release:check` para probar el CLI y verificar que el tarball solo
-incluya los archivos públicos permitidos. Las versiones se publican con la
-acción npm auto-release; la primera publicación requiere autenticación inicial.
-Consulta las instrucciones de la [skill](./skills/product-changelog/README.md).
+como dependencia de desarrollo. El CLI se mantiene y publica desde
+[doscientos-es/changelog](https://github.com/doscientos-es/changelog), donde
+están su instalación, uso y proceso de publicación.
 
 Las skills se distribuyen **por repositorio**, no por ordenador:
 

@@ -29,4 +29,4 @@ Cuando pidan «actualiza el changelog de X», identifica el repositorio Git exac
 4. Ejecuta `pnpm exec changelog add <to-del-plan> <fecha-UTC> <título> <borrador.json>` y `pnpm changelog:sync`. Revisa el diff y ejecuta `pnpm changelog:check` y los checks del proyecto. Si HEAD cambió o el cursor ya no es ancestro, vuelve a planificar; nunca fuerces el marcador.
 5. Informa del intervalo cubierto, limitaciones (PRs/despliegue), entrada añadida y rutas del Markdown/JSON. No comitees automáticamente.
 
-El CLI usa Node.js y Git sin dependencias. `npm run release:check` prueba el contrato y que el paquete tarball solo contenga los archivos públicos esperados. Copia la skill al repositorio para que viaje versionada con él.
+El CLI usa Node.js y Git sin dependencias; se mantiene en [doscientos-es/changelog](https://github.com/doscientos-es/changelog). Copia la skill al repositorio para que viaje versionada con él.
