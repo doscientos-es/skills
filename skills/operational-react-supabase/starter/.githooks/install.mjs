@@ -9,13 +9,16 @@ const git = (...args) => spawnSync('git', args, { cwd: root, encoding: 'utf8' })
 try {
   const repository = git('rev-parse', '--show-toplevel')
   if (repository.status !== 0 || realpathSync(repository.stdout.trim()) !== root) {
-    throw new Error('Run hooks:install only in an initialized repository root, not a nested package.')
+    throw new Error(
+      'Run hooks:install only in an initialized repository root, not a nested package.',
+    )
   }
   const { scripts = {} } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
   if (!scripts['quality:quick']) throw new Error('Define quality:quick before installing hooks.')
 
   const current = git('config', '--get', 'core.hooksPath')
-  if (current.status !== 0 && current.status !== 1) throw new Error('Cannot inspect Git hooks config.')
+  if (current.status !== 0 && current.status !== 1)
+    throw new Error('Cannot inspect Git hooks config.')
   if (current.status === 0 && current.stdout.trim() !== '.githooks') {
     throw new Error('Existing core.hooksPath preserved. Review and integrate its hooks manually.')
   }
@@ -36,6 +39,8 @@ try {
     'Hooks installed: pre-commit (pnpm quality:quick) and commit-msg (Conventional Commits). No pre-push hook or automatic fixes.\n',
   )
 } catch (error) {
-  process.stderr.write(error instanceof Error ? `${error.message}\n` : 'Hook installation failed.\n')
+  process.stderr.write(
+    error instanceof Error ? `${error.message}\n` : 'Hook installation failed.\n',
+  )
   process.exitCode = 1
 }

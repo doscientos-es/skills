@@ -25,7 +25,9 @@ export function CustomerDetailDrawer({ customer }: { customer: Customer }) {
       <DetailDrawer dialogProps={{ 'aria-label': `Ficha de ${customer.name}` }}>
         <DetailDrawerHeader>
           <DrawerTitle>{customer.name}</DrawerTitle>
-          <DrawerDescription>Datos de demostración; no corresponden a un cliente real.</DrawerDescription>
+          <DrawerDescription>
+            Datos de demostración; no corresponden a un cliente real.
+          </DrawerDescription>
         </DetailDrawerHeader>
         <DetailDrawerBody>
           <DescriptionList>

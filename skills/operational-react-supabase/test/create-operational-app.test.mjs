@@ -67,6 +67,10 @@ test('creates a personalized operational project from the single starter templat
       releases: [],
     })
     await readFile(join(target, 'CHANGELOG.md'), 'utf8')
+    assert.match(
+      await readFile(join(target, '.prettierignore'), 'utf8'),
+      /CHANGELOG\.md[\s\S]*public\/changelog\.json/,
+    )
     const workflow = await readFile(join(target, '.github', 'workflows', 'ci.yml'), 'utf8')
     assert.match(workflow, /fetch-depth: 0/)
     assert.match(workflow, /pnpm install --frozen-lockfile/)
