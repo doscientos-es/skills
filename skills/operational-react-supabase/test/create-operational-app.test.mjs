@@ -49,7 +49,26 @@ test('creates a personalized operational project from the single starter templat
       await readFile(join(target, '.githooks', '.gitattributes'), 'utf8'),
       /pre-commit text eol=lf/,
     )
+    assert.equal(
+      packageJson.scripts['changelog:sync'],
+      'changelog generate public/changelog.json --md CHANGELOG.md --soft',
+    )
+    assert.match(packageJson.scripts['changelog:check'], /--check/)
+    assert.match(packageJson.scripts.build, /^pnpm changelog:sync/)
+    assert.ok(packageJson.devDependencies['@doscientos/changelog'])
+    const commitMsg = await readFile(join(target, '.githooks', 'commit-msg'), 'utf8')
+    assert.match(commitMsg, /changelog lint-commit/)
+    assert.doesNotMatch(commitMsg, /\r/)
+    assert.match(
+      await readFile(join(target, '.githooks', '.gitattributes'), 'utf8'),
+      /commit-msg text eol=lf/,
+    )
+    assert.deepEqual(JSON.parse(await readFile(join(target, 'public', 'changelog.json'), 'utf8')), {
+      releases: [],
+    })
+    await readFile(join(target, 'CHANGELOG.md'), 'utf8')
     const workflow = await readFile(join(target, '.github', 'workflows', 'ci.yml'), 'utf8')
+    assert.match(workflow, /fetch-depth: 0/)
     assert.match(workflow, /pnpm install --frozen-lockfile/)
     assert.match(workflow, /pnpm quality/)
     assert.match(workflow, /pnpm build/)

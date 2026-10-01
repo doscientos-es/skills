@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm typecheck && vite build",
+    "build": "pnpm changelog:sync && pnpm typecheck && vite build",
+    "changelog:sync": "changelog generate public/changelog.json --md CHANGELOG.md --soft",
+    "changelog:check": "changelog generate public/changelog.json --md CHANGELOG.md --check",
     "preview": "vite preview",
     "format": "oxfmt -c node_modules/@doscientos/configs/oxfmt.json --write .",
     "format:check": "oxfmt -c node_modules/@doscientos/configs/oxfmt.json --check .",
@@ -27,6 +29,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@doscientos/changelog": "^0.1.3",
     "@doscientos/configs": "^0.1.9",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/router-plugin": "^1.168.35",

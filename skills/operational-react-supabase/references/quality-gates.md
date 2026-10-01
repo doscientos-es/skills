@@ -83,6 +83,14 @@ No borrar archivos ni otros hooks. No hacer esta desactivación para saltarse va
 - Probar el instalador (idempotencia, conflictos, repo anidado), rechazo/éxito del hook y
   preservación de staging parcial. No crear commits reales para ensayar el hook.
 
+## Changelog y commit-msg en el starter
+
+El starter añade el hook `commit-msg` (`changelog lint-commit`, Conventional Commits) junto
+al pre-commit; `hooks:install` instala ambos. `pnpm changelog:sync` (con `--soft`) se ejecuta
+en `pnpm build` y genera `CHANGELOG.md` + `public/changelog.json`. `changelog:check` es para CI
+con historial completo (`fetch-depth: 0`), no para `quality`, porque el generado siempre
+va un commit por detrás de HEAD.
+
 ## Regla para agentes
 
 Ejecutar el test mínimo mientras se desarrolla y **`pnpm quality` al cerrar**; ejecutar

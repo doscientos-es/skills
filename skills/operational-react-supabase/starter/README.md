@@ -91,7 +91,20 @@ una regresión en `@doscientos/configs` y corregir la regla o la plantilla delib
 - `pnpm typecheck`: contrato TypeScript estricto.
 - `pnpm test`: pruebas de lógica de URL y dominio.
 - `pnpm quality`: todos los checks anteriores.
-- `pnpm build`: compilación estática de Vite y generación del árbol de rutas.
+- `pnpm build`: sincroniza el changelog, compila con Vite y genera el árbol de rutas.
+
+## Changelog automático
+
+Viene configurado de serie: no hay que montarlo a mano. Los mensajes de commit siguen
+Conventional Commits (`feat:`, `fix:`, `perf:` aparecen; el resto no) y el hook
+`commit-msg` (instalado con `pnpm hooks:install`) rechaza los que no cumplan.
+
+- `pnpm changelog:sync` genera `CHANGELOG.md` y `public/changelog.json` desde Git
+  (`--soft` tolera clones superficiales o sin historial). Se ejecuta en `pnpm build`.
+- `pnpm changelog:check` falla si los archivos generados están obsoletos (útil en CI
+  con historial completo; no forma parte de `quality` porque siempre va un commit por detrás).
+- Los archivos generados no se editan a mano. CI usa `fetch-depth: 0` para ver el historial.
+- La app puede mostrar `/changelog.json` (servido desde `public/`) en su pantalla de novedades.
 
 Antes de añadir una nueva feature, replica los escenarios `default`, `loading`,
 `empty`, `error` y contenido largo usando fixtures; conecta backend real sólo

@@ -117,6 +117,11 @@ solo ejecuta `pnpm quality:quick` (formato y lint sin modificar archivos); no su
 tests ni build. Instalar hooks explícitamente por clon con `pnpm hooks:install`, sin
 sobrescribir hooks existentes ni instalar herramientas nuevas por defecto.
 
+El starter ya incluye el changelog automático desde Git: `@doscientos/changelog`,
+scripts `changelog:sync`/`changelog:check`, hook `commit-msg` (Conventional Commits),
+`CHANGELOG.md`, `public/changelog.json` y `fetch-depth: 0` en CI. No lo configures
+a mano al generar una app; usa commits `feat:`/`fix:`/`perf:` y `pnpm changelog:sync`.
+
 Documenta propósito, arranque, scripts, variables por nombre, arquitectura, modo demo,
 modelo de despliegue y operaciones de servidor. Añade `.env.example` sin valores sensibles.
 Mantén `docs/demo-to-production.md` y `docs/implementation-status.md` según el pipeline.
