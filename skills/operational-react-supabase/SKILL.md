@@ -17,6 +17,8 @@ description: 'Guía operativa Doscientos para CRM, billing, portales y demos: de
 4. UI, billing o integraciones: [reutilización y límites](./references/reusable-modules.md).
 5. Scripts, hooks o CI: [contrato quality y pre-commit](./references/quality-gates.md).
 
+6. Diseño de pantallas, estados y feedback: skill `product-ui-design`.
+
 Las referencias viven dentro de esta skill para viajar con `--copy`. Léelas antes de
 implementar el área afectada. Son la fuente canónica; los documentos de `docs/` solo enlazan.
 

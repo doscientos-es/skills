@@ -22,7 +22,9 @@ No sobrescribe directorios no vacíos. Ejecuta `pnpm install` explícitamente co
 
 Después:
 
-1. Ejecuta `pnpm quality` y `pnpm build`.
+1. Ejecuta `pnpm quality`. Antes de `pnpm build`, inicializa el repositorio Git
+   y crea un primer commit revisando qué archivos incluyes. El changelog necesita
+   al menos un commit; `--soft` no sustituye ese requisito.
    Tras la primera instalación, revisa y versiona `pnpm-lock.yaml`: el workflow incluido
    exige instalación congelada y ejecuta esos mismos comandos, sin credenciales reales.
 2. Sustituye la feature `customers` por el primer vertical aprobado.
@@ -44,19 +46,57 @@ con Edge. Instalar el preset operativo dentro del repositorio para conservar est
 
 ## Contrato de la plantilla
 
-| Área                      | Propósito                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------- |
-| `src/app`                 | Inicialización de Query, router y shell; compone las features.                |
-| `src/routes`              | Rutas de TanStack Router y validación de URL; `routeTree.gen.ts` es generado. |
-| `src/features/customers`  | UI, aplicación e infraestructura del vertical de ejemplo.                     |
-| `src/shared/lib/supabase` | Constructor del cliente de navegador; no lo invoques desde componentes.       |
-| `src/demos`               | Fixtures sintéticas reutilizables por los adaptadores y tests.                |
-| `supabase/migrations`     | Migraciones pequeñas y versionadas, tras aprobar el modelo de datos.          |
-| `supabase/functions`      | Operaciones Edge cuando el runtime y el alcance lo permitan.                  |
+| Área                                                         | Propósito                                                                     |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| `src/app`                                                    | Inicialización de Query, router y shell; compone las features.                |
+| `src/routes`                                                 | Rutas de TanStack Router y validación de URL; `routeTree.gen.ts` es generado. |
+| `src/features/customers`                                     | UI, aplicación e infraestructura del vertical de ejemplo.                     |
+| `src/shared/lib/supabase`                                    | Constructor del cliente de navegador; no lo invoques desde componentes.       |
+| `src/features/customers/infrastructure/customer-fixtures.ts` | Fixtures sintéticas del vertical, reutilizables por el adaptador y tests.     |
+| `supabase/migrations`                                        | Migraciones pequeñas y versionadas, tras aprobar el modelo de datos.          |
+| `supabase/functions`                                         | Operaciones Edge cuando el runtime y el alcance lo permitan.                  |
 
 La URL pertenece a TanStack Router, la caché remota a TanStack Query y las
 primitivas visuales a `@doscientos/ui`. La feature conserva la lógica de
 filtrado y su adaptador; las rutas no conocen Supabase.
+
+## Base visual y pantallas de referencia
+
+El shell toma como referencia la sobriedad de Scandice, Ábaco y SobreTaula:
+canvas cálido, superficies planas, bordes suaves, navegación compacta y un solo
+acento. No copia entidades, marcas, datos ni permisos de esas aplicaciones.
+
+- `src/styles.css` centraliza la marca y la geometría. Usa una fuente de sistema
+  sin depender de Google Fonts ni fingir que Inter está instalada. Si cambias
+  la fuente, cárgala explícitamente; si cambias colores, vuelve a comprobar contraste.
+- Navegación de escritorio y móvil con destinos reales, página actual, foco
+  visible, enlace «Saltar al contenido» y título del documento por pantalla.
+  Cambiar de ruta enfoca el contenido; cambiar filtros no roba el foco.
+- El listado combina métricas calculadas del resultado, búsqueda etiquetada,
+  selección de estado accesible, tabla adaptable y ficha en drawer.
+- «Nuevo cliente» demuestra validación, envío pendiente, errores y confirmación
+  accesible. Solo crea fichas en memoria; no utiliza red, localStorage ni Supabase.
+  Se pierden al recargar. No uses esa memoria como almacenamiento de producción.
+- `/guia` enlaza a los escenarios `default`, `loading`, `empty`, `error` y `long`.
+  El parámetro `scenario` es exclusivo de la demo: retíralo al adaptar el producto.
+
+Se usan las primitivas de la versión fijada en el lockfile. No se copian las
+implementaciones del paquete UI ni se añade una dependencia para iconos o tests.
+Cuando se adopte una versión publicada con `FormDialog`, sustituye la composición
+del formulario por esa abstracción; no construyas otro wrapper genérico local.
+
+### Revisión de accesibilidad antes de entregar
+
+Los tests comprueban validación, datos sintéticos, estados, nombres accesibles de
+tabla/acciones, encabezados de columna y contraste de los pares de tokens base.
+No sustituyen una auditoría de navegador ni comprueban todos los colores mezclados:
+
+1. Recorre navegación, filtros, alta y detalle con Tab/Shift+Tab; prueba Enter y Escape.
+2. Comprueba foco inicial, cierre y retorno al botón que abrió cada overlay.
+3. Revisa escritorio, 375px, zoom al 200% y contenido largo sin scroll horizontal de página.
+4. Comprueba que la barra móvil no tapa acciones y respeta el área segura del dispositivo.
+5. Activa movimiento reducido y verifica estados de carga, error, vacío y reintento.
+6. Verifica contraste AA con los tokens de marca finales y una revisión con lector de pantalla.
 
 ## Variables de entorno
 
@@ -100,7 +140,7 @@ Conventional Commits (`feat:`, `fix:`, `perf:` aparecen; el resto no) y el hook
 `commit-msg` (instalado con `pnpm hooks:install`) rechaza los que no cumplan.
 
 - `pnpm changelog:sync` genera `CHANGELOG.md` y `public/changelog.json` desde Git
-  (`--soft` tolera clones superficiales o sin historial). Se ejecuta en `pnpm build`.
+  (`--soft` tolera clones superficiales, pero exige al menos un commit). Se ejecuta en `pnpm build`.
 - `pnpm changelog:check` falla si los archivos generados están obsoletos (útil en CI
   con historial completo; no forma parte de `quality` porque siempre va un commit por detrás).
 - Los archivos generados no se editan a mano. CI usa `fetch-depth: 0` para ver el historial.

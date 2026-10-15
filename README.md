@@ -78,6 +78,13 @@ Para ese mismo tipo de aplicación de cliente con una identidad visual aprobada:
 pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ecosystem,operational-react-supabase,brand-implementation --agent augment,codex --copy --yes
 ```
 
+Para añadir los criterios de diseño de producto (densidad, tablas, pestañas,
+estados vacíos, avisos, asistentes) a cualquiera de los presets anteriores:
+
+```bash
+pnpm dlx skills add doscientos-es/skills --skill product-ui-design --agent augment,codex --copy --yes
+```
+
 Para un producto, web o herramienta interna de Doscientos:
 
 ```bash
@@ -98,6 +105,7 @@ pnpm dlx skills add doscientos-es/skills --skill technical-details,doscientos-ec
 | CRM, billing o portal Supabase con marca aprobada | Añade `operational-react-supabase` y `brand-implementation` |
 | Producto, web o herramienta interna               | Añade `doscientos-internal-brand`                           |
 | Demo comercial basada en un lead                  | Añade `operational-react-supabase` y `lead-demo-generation` |
+| Cualquier app de producto con interfaz            | Añade `product-ui-design` (criterios UI/UX senior)          |
 
 Ejecuta el comando que corresponda al repositorio, incluido el preset compuesto
 para una aplicación operativa de cliente. No combines una skill de marca interna
@@ -208,6 +216,8 @@ skills/
 │   ├── SKILL.md
 │   └── references/       # decisión, pipeline, implementación y reutilización
 ├── brand-implementation/
+│   └── SKILL.md
+├── product-ui-design/
 │   └── SKILL.md
 ├── doscientos-internal-brand/
 │   └── SKILL.md

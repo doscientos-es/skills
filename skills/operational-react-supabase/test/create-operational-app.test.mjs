@@ -39,7 +39,11 @@ test('creates a personalized operational project from the single starter templat
     assert.equal(packageJson.scripts.test, 'vitest run')
     assert.equal(packageJson.scripts['quality:quick'], 'pnpm format:check && pnpm lint')
     assert.equal(packageJson.scripts['hooks:install'], 'node .githooks/install.mjs')
-    assert.equal(packageJson.scripts.prepare, undefined, 'generation must not silently install hooks')
+    assert.equal(
+      packageJson.scripts.prepare,
+      undefined,
+      'generation must not silently install hooks',
+    )
     assert.match(lockfile, /^lockfileVersion:/m)
     const hook = await readFile(join(target, '.githooks', 'pre-commit'), 'utf8')
     assert.match(hook, /exec pnpm quality:quick/)
@@ -77,15 +81,45 @@ test('creates a personalized operational project from the single starter templat
     assert.match(workflow, /pnpm quality/)
     assert.match(workflow, /pnpm build/)
     assert.match(html, /<title>CRM Acme<\/title>/)
-    assert.match(appFrame, />CRM Acme</)
+    assert.match(appFrame, /CRM Acme/)
     assert.doesNotMatch(html, /__APP_TITLE__/)
     assert.doesNotMatch(appFrame, /__APP_TITLE__/)
+    assert.match(appFrame, /href="#main-content"/)
+    assert.match(appFrame, /tabIndex=\{-1\}/)
+    assert.match(appFrame, /aria-current=/)
+    assert.match(appFrame, /previousPath\.current !== pathname/)
+    assert.match(appFrame, /starter-mobile-nav/)
+    await readFile(join(target, 'src', 'routes', 'guia.tsx'), 'utf8')
+    await readFile(join(target, 'src', 'app', 'theme.test.ts'), 'utf8')
+    await readFile(
+      join(target, 'src', 'features', 'customers', 'infrastructure', 'customer-fixtures.ts'),
+      'utf8',
+    )
+    await assert.rejects(readFile(join(target, 'src', 'demos', 'customers.ts'), 'utf8'), {
+      code: 'ENOENT',
+    })
+    await readFile(
+      join(target, 'src', 'features', 'customers', 'ui', 'customer-create-dialog.tsx'),
+      'utf8',
+    )
     await readFile(join(target, '.env.example'), 'utf8')
     await readFile(join(target, '.gitignore'), 'utf8')
     await readFile(
       join(target, 'src', 'features', 'customers', 'application', 'customer-search.test.ts'),
       'utf8',
     )
+  })
+})
+
+test('escapes a custom title in every shell occurrence and in the HTML document', async () => {
+  await withTemporaryDirectory(async (directory) => {
+    const target = join(directory, 'escaped-title')
+    await runCli([target, '--title', 'Demo <&> {team}'])
+    for (const file of ['index.html', 'src/app/app-frame.tsx']) {
+      const content = await readFile(join(target, file), 'utf8')
+      assert.match(content, /Demo &lt;&amp;&gt; &#123;team&#125;/)
+      assert.doesNotMatch(content, /__APP_TITLE__|Demo <&>/)
+    }
   })
 })
 

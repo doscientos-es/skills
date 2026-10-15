@@ -7,5 +7,7 @@ export function useCustomersQuery(search: CustomerSearch) {
   return useQuery({
     queryKey: ['customers', search],
     queryFn: () => listCustomers(search),
+    enabled: search.scenario !== 'loading',
+    retry: search.scenario === 'error' ? false : 1,
   })
 }

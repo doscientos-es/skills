@@ -1,4 +1,7 @@
 import {
+  Avatar,
+  AvatarFallback,
+  Badge,
   Button,
   DescriptionDetails,
   DescriptionItem,
@@ -15,15 +18,21 @@ import {
 } from '@doscientos/ui'
 
 import type { Customer } from '../application/customer'
+import { customerInitials, customerStatusLabels, formatCurrency } from './customer-presentation'
 
 export function CustomerDetailDrawer({ customer }: { customer: Customer }) {
   return (
     <DrawerTrigger>
-      <Button variant="outline" size="sm">
-        Ver ficha
+      <Button variant="ghost" aria-label={`Ver ficha de ${customer.name}`} className="min-h-11">
+        Ver
       </Button>
       <DetailDrawer dialogProps={{ 'aria-label': `Ficha de ${customer.name}` }}>
         <DetailDrawerHeader>
+          <Avatar className="mb-2 size-12">
+            <AvatarFallback className="bg-secondary text-primary">
+              {customerInitials(customer.name)}
+            </AvatarFallback>
+          </Avatar>
           <DrawerTitle>{customer.name}</DrawerTitle>
           <DrawerDescription>
             Datos de demostración; no corresponden a un cliente real.
@@ -37,11 +46,15 @@ export function CustomerDetailDrawer({ customer }: { customer: Customer }) {
             </DescriptionItem>
             <DescriptionItem>
               <DescriptionTerm>Email</DescriptionTerm>
-              <DescriptionDetails>{customer.email}</DescriptionDetails>
+              <DescriptionDetails className="break-all">{customer.email}</DescriptionDetails>
             </DescriptionItem>
             <DescriptionItem>
               <DescriptionTerm>Estado</DescriptionTerm>
-              <DescriptionDetails>{customer.status}</DescriptionDetails>
+              <DescriptionDetails>
+                <Badge variant={customer.status === 'active' ? 'success' : 'outline'}>
+                  {customerStatusLabels[customer.status]}
+                </Badge>
+              </DescriptionDetails>
             </DescriptionItem>
             <DescriptionItem>
               <DescriptionTerm>Valor mensual</DescriptionTerm>
@@ -55,8 +68,4 @@ export function CustomerDetailDrawer({ customer }: { customer: Customer }) {
       </DetailDrawer>
     </DrawerTrigger>
   )
-}
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value)
 }
